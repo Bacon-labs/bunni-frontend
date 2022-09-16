@@ -1,0 +1,224 @@
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <h1>Analytics</h1>
+    <div class="col-12">
+      <div class="card card-inner-shadow">
+        <div class="card-body p-0">
+          <app-total-value-locked> </app-total-value-locked>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row justify-content-center">
+    <div class="col-12">
+      <div class="card card-inner-shadow">
+        <div class="card-body p-0">
+          <div class="table-responsive">
+            <table
+              mat-table
+              matSort
+              matSortActive="totalValueLocked"
+              matSortDirection="desc"
+              matSortDisableClear
+              [dataSource]="vaultDetails"
+              (matSortChange)="sortBy($event)"
+              class="table table-sm table-nowrap mb-0"
+            >
+              <ng-container matColumnDef="name">
+                <th mat-header-cell mat-sort-header *matHeaderCellDef>Name</th>
+                <td mat-cell *matCellDef="let vault; let i = index" class="col-4">
+                  <div class="d-flex align-items-center my-3">
+                    <div class="me-3">
+                      {{ i + 1 }}
+                    </div>
+                    <div class="avatar avatar-xs">
+                      <img
+                        alt="Vault Icon"
+                        class="avatar-img rounded-circle me-3"
+                        [src]="vault.iconPath"
+                        onerror="this.src = 'assets/img/tokens/unknown.svg'"
+                      />
+                    </div>
+                    <div class="ms-3">
+                      <a class="text-white" href="#" target="_blank"
+                        >{{ vault.name }} ({{ vault.symbol }})</a
+                      >
+                    </div>
+                  </div>
+                </td>
+                <td mat-footer-cell *matFooterCellDef></td>
+              </ng-container>
+
+              <ng-container matColumnDef="totalValueLocked">
+                <th mat-header-cell mat-sort-header *matHeaderCellDef>TVL</th>
+                <td mat-cell *matCellDef="let vault" class="col-2">
+                  <div class="d-flex align-items-center my-3">
+                    ${{ vault.totalValueLocked[0].toFormat(2)
+                    }}{{ vault.totalValueLocked[1] }}
+                  </div>
+                </td>
+                <td mat-footer-cell *matFooterCellDef></td>
+              </ng-container>
+
+              <ng-container matColumnDef="dayChange">
+                <th mat-header-cell mat-sort-header *matHeaderCellDef>1d Change</th>
+                <td mat-cell *matCellDef="let vault" class="col-2">
+                  <div
+                    class="d-flex align-items-center my-3"
+                    [ngClass]="
+                      vault.dayChange && vault.dayChange.lt(0)
+                        ? 'text-danger'
+                        : vault.dayChange && vault.dayChange.gt(0)
+                        ? 'text-success'
+                        : 'text-white'
+                    "
+                  >
+                    <ng-container *ngIf="vault.dayChange">
+                      <ng-container *ngIf="vault.dayChange && vault.dayChange.gt(0)">
+                        + {{ vault.dayChange.dp(2).toPrecision() }}%
+                      </ng-container>
+                      <ng-container *ngIf="vault.dayChange && vault.dayChange.eq(0)">
+                        {{ vault.dayChange.dp(2).toPrecision() }}%
+                      </ng-container>
+                      <ng-container *ngIf="vault.dayChange && vault.dayChange.lt(0)">
+                        - {{ vault.dayChange.abs().dp(2).toPrecision() }}%
+                      </ng-container>
+                    </ng-container>
+                  </div>
+                  <div class="d-flex align-items-center my-3 text-white" *ngIf="!vault.dayChange">
+                    -
+                  </div>
+                </td>
+                <td mat-footer-cell *matFooterCellDef></td>
+              </ng-container>
+
+              <ng-container matColumnDef="weekChange">
+                <th mat-header-cell mat-sort-header *matHeaderCellDef>7d Change</th>
+                <td mat-cell *matCellDef="let vault" class="col-2">
+                  <div
+                    class="d-flex align-items-center my-3"
+                    [ngClass]="
+                      vault.weekChange && vault.weekChange.lt(0)
+                        ? 'text-danger'
+                        : vault.weekChange && vault.weekChange.gt(0)
+                        ? 'text-success'
+                        : 'text-white'
+                    "
+                  >
+                    <ng-container *ngIf="vault.weekChange">
+                      <ng-container *ngIf="vault.weekChange && vault.weekChange.gt(0)">
+                        + {{ vault.weekChange.dp(2).toPrecision() }}%
+                      </ng-container>
+                      <ng-container *ngIf="vault.weekChange && vault.weekChange.eq(0)">
+                        {{ vault.weekChange.dp(2).toPrecision() }}%
+                      </ng-container>
+                      <ng-container *ngIf="vault.weekChange && vault.weekChange.lt(0)">
+                        - {{ vault.weekChange.abs().dp(2).toPrecision() }}%
+                      </ng-container>
+                    </ng-container>
+                  </div>
+                  <div class="d-flex align-items-center my-3 text-white" *ngIf="!vault.weekChange">
+                    -
+                  </div>
+                </td>
+                <td mat-footer-cell *matFooterCellDef></td>
+              </ng-container>
+
+              <ng-container matColumnDef="monthChange">
+                <th mat-header-cell mat-sort-header *matHeaderCellDef>30d Change</th>
+                <td mat-cell *matCellDef="let vault" class="col-2">
+                  <div
+                    class="d-flex align-items-center my-3"
+                    [ngClass]="
+                      vault.monthChange && vault.monthChange.lt(0)
+                        ? 'text-danger'
+                        : vault.monthChange && vault.monthChange.gt(0)
+                        ? 'text-success'
+                        : 'text-white'
+                    "
+                  >
+                    <ng-container *ngIf="vault.monthChange">
+                      <ng-container *ngIf="vault.monthChange && vault.monthChange.gt(0)">
+                        + {{ vault.monthChange.dp(2).toPrecision() }}%
+                      </ng-container>
+                      <ng-container *ngIf="vault.monthChange && vault.monthChange.eq(0)">
+                        {{ vault.monthChange.dp(2).toPrecision() }}%
+                      </ng-container>
+                      <ng-container *ngIf="vault.monthChange && vault.monthChange.lt(0)">
+                        - {{ vault.monthChange.abs().dp(2).toPrecision() }}%
+                      </ng-container>
+                    </ng-container>
+                  </div>
+                  <div class="d-flex align-items-center my-3 text-white" *ngIf="!vault.monthChange">
+                    -
+                  </div>
+                </td>
+                <td mat-footer-cell *matFooterCellDef></td>
+              </ng-container>
+
+              <tr
+                mat-header-row
+                *matHeaderRowDef="[
+                  'name',
+                  'totalValueLocked',
+                  'dayChange',
+                  'weekChange',
+                  'monthChange'
+                ]"
+              ></tr>
+              <tr
+                mat-row
+                *matRowDef="
+                  let vault;
+                  columns: [
+                    'name',
+                    'totalValueLocked',
+                    'dayChange',
+                    'weekChange',
+                    'monthChange'
+                  ]
+                "
+                class="mat-table-row"
+              ></tr>
+            </table>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!--legacy code
+<div class="tvl-stat-card card-grey">
+  <h3>Total Value Locked (USD)</h3>
+  <h1 class="mb-0">
+    ${{ totalValueLocked[0].toFormat(2) }}{{ totalValueLocked[1] }}
+  </h1>
+</div>
+<div class="tvl-stat-card card-grey">
+  <h3>Change (24h)</h3>
+  <h1
+    class="mb-0"
+    [ngClass]="
+      totalValueChanged.lt(0)
+        ? 'text-danger'
+        : totalValueChanged.gt(0)
+        ? 'text-success'
+        : 'text-white'
+    "
+  >
+    <ng-container *ngIf="totalValueChanged.gt(0)">
+      + {{ totalValueChanged.toFormat(2) }}%
+    </ng-container>
+    <ng-container *ngIf="totalValueChanged.lt(0)">
+      - {{ totalValueChanged.abs().toFormat(2) }}%
+    </ng-container>
+  </h1>
+</div>
+<div class="tvl-stat-card card-grey">
+  <h3>Statistic #3</h3>
+  <h1 class="mb-0">Implement Me!</h1>
+</div>
+-->

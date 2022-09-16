@@ -1,0 +1,314 @@
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-12 col-lg-8">
+      <div class="row align-items-center justify-content-between">
+        <div class="col">
+          <h1>Swap</h1>
+        </div>
+        <div class="col-auto">
+          <div class="dropdown">
+            <button
+              type="button"
+              class="btn btn-link text-secondary"
+              data-bs-toggle="dropdown"
+              data-bs-auto-close="outside"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              <i class="fe fe-settings"></i>
+            </button>
+
+            <div
+              class="dropdown-menu dropdown-menu-card dropdown-menu-end mt-n2 me-3"
+            >
+              <div class="card-header">
+                <h4 class="card-header-title">Transaction Settings</h4>
+              </div>
+              <div class="card-body pt-0">
+                <label for="slippage-tolerance">Slippage Tolerance</label>
+                <div class="input-group mb-4">
+                  <input
+                  type="tel"
+                  class="form-control card card-inner-shadow mb-0"
+                  id="slippage-tolerance"
+                  placeholder="1%"
+                  [value]="slippage / 100"
+                  (input)="setSlippage($event.target.value)"
+                  autocomplete="off"
+                  aria-label="Recipient's username with two button addons">
+                  <button class="btn btn-outline-dark text-white" type="button" (click)="setSlippage(0.5)">0.5</button>
+                  <button class="btn btn-outline-dark text-white" type="button" (click)="setSlippage(1)">1</button>
+                  <button class="btn btn-outline-dark text-white" type="button" (click)="setSlippage(1.5)">1.5</button>
+                  <button class="btn btn-outline-dark text-white" type="button" (click)="setSlippage(2)">2</button>
+                </div>
+                <label for="tx-deadline">Transaction deadline</label>
+                <div class="input-group">
+                  <input type="tel"
+                  class="form-control card card-inner-shadow mb-0"
+                  id="tx-deadline"
+                  placeholder="30"
+                  [value]="deadline / 60"
+                  (input)="setDeadline($event.target.value)"
+                  autocomplete="off"
+                  aria-describedby="tx-deadline">
+                  <span class="input-group-text text-white border-dark bg-transparent" id="tx-deadline">minutes</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FROM -->
+      <div class="card card-inner-shadow mb-0">
+        <div class="card-header py-4">
+          <div class="row align-items-center justify-content-between">
+            <div class="col">
+              <h2 class="h5 mb-0 text-uppercase text-secondary">From</h2>
+            </div>
+          </div>
+        </div>
+        <div class="card-body py-0">
+          <div class="row g-3 align-items-start mb-3">
+            <div class="col-6">
+              <span
+                (click)="openTokenSelectModal(true, false)"
+                style="cursor: pointer;"
+              >
+                <div class="row g-3 align-items-center">
+                  <div class="col-auto">
+                    <div class="avatar">
+                      <img
+                        src="{{ fromToken.iconPath }}"
+                        alt="{{ fromToken.symbol }} Icon"
+                        class="avatar-img rounded-circle"
+                        [ngClass]="{
+                          'border-pyt': fromToken.symbol
+                            .toLowerCase()
+                            .includes('pyt'),
+                          'border-nyt': fromToken.symbol
+                            .toLowerCase()
+                            .includes('nyt')
+                        }"
+                        onerror="this.src = 'assets/img/tokens/unknown.svg'"
+                      />
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="d-flex align-items-center">
+                      <h3 class="mb-1 name text-white text-truncate me-2">
+                        {{ fromToken.symbol }}
+                      </h3>
+                      <span class="fe fe-chevron-down text-white"></span>
+                    </div>
+                    <p class="small mb-0 text-secondary">
+                      ${{ fromAmount.times(fromPrice).toFormat(2) }}
+                    </p>
+                  </div>
+                </div>
+              </span>
+            </div>
+            <div class="col-6 text-end">
+              <h2 class="mb-1 name text-white text-truncate">
+                <label for="from-amount" class="form-label d-none">
+                  From Amount
+                </label>
+                <input
+                  type="text"
+                  class="form-control form-control-flush form-control-md input-sm text-end w-100"
+                  name="from-amount"
+                  id="from-amount"
+                  aria-describedby="helpId"
+                  placeholder="0.00"
+                  [value]="fromAmount.toFixed()"
+                  (input)="setFromAmount($event.target.value)"
+                  autocomplete="off"
+                />
+              </h2>
+              <p class="small mb-0 text-secondary">
+                Balance: {{ fromBalance.toFormat(4) }}
+                <button
+                  class="btn btn-sm btn-link pt-0 px-0"
+                  (click)="setFromAmount(fromBalance)"
+                >
+                  Max
+                </button>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- END FROM -->
+
+      <div class="row justify-content-center align-items-center my-n3">
+        <button
+          type="submit"
+          class="btn btn-rounded-circle btn-switch"
+          (click)="switch()"
+          [disabled]="loading"
+        >
+          <i class="fe fe-arrow-down"></i></button
+        ><button type="submit" class="btn btn-link d-none">
+          <i class="fe fe-arrow-up"></i>
+        </button>
+      </div>
+
+      <!-- TO -->
+      <div class="card card-inner-shadow mb-0">
+        <div class="card-header py-4">
+          <div class="row align-items-center justify-content-between">
+            <div class="col-auto">
+              <h2 class="h5 mb-0 text-uppercase text-secondary">To</h2>
+            </div>
+          </div>
+        </div>
+        <div class="card-body py-0">
+          <div class="row g-3 align-items-start mb-3">
+            <div class="col-6">
+              <span
+                (click)="openTokenSelectModal(false, true)"
+                style="cursor: pointer;"
+              >
+                <div class="row g-3 align-items-center">
+                  <div class="col-auto">
+                    <div class="avatar">
+                      <img
+                        src="{{ toToken.iconPath }}"
+                        alt="x"
+                        class="avatar-img rounded-circle"
+                        [ngClass]="{
+                          'border-pyt': toToken.symbol
+                            .toLowerCase()
+                            .includes('pyt'),
+                          'border-nyt': toToken.symbol
+                            .toLowerCase()
+                            .includes('nyt')
+                        }"
+                        onerror="this.src = 'assets/img/tokens/unknown.svg'"
+                      />
+                    </div>
+                  </div>
+                  <div class="col text-truncate">
+                    <div class="d-flex align-items-center">
+                      <h3 class="mb-1 name text-white text-truncate me-2">
+                        {{ toToken.symbol }}
+                      </h3>
+                      <span class="fe fe-chevron-down text-white"></span>
+                    </div>
+                    <p class="small mb-0 text-secondary">
+                      ${{ toAmount.times(toPrice).toFormat(2) }}
+                    </p>
+                  </div>
+                </div>
+              </span>
+            </div>
+            <div class="col-6 text-end overflow-auto">
+              <h2
+                class="mb-1 name text-white text-truncate"
+                [ngClass]="{ 'text-muted': loading }"
+              >
+                {{ toAmount.toFixed() }}
+              </h2>
+              <p class="small mb-0 text-secondary">
+                Balance: {{ toBalance.toFormat(4) }}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- END TO -->
+
+      <a
+        class="btn w-100 px-0"
+        [ngClass]="{ disabled: loading }"
+        data-bs-toggle="collapse"
+        href="#collapseExample"
+        role="button"
+        aria-expanded="false"
+        aria-controls="collapseExample"
+        *ngIf="fromAmount.gt(0)"
+      >
+        <div class="row mt-3">
+          <div class="col text-start" *ngIf="!loading">
+            <span class="text-white h4 mb-0 me-1">
+              1 {{ fromToken.symbol }} =
+              {{ trade.executionPrice.dp(6).toPrecision() }}
+              {{ toToken.symbol }}
+            </span>
+            <span class="text-secondary">
+              (${{ trade.executionPrice.times(toPrice).toFormat(2) }})
+            </span>
+          </div>
+          <div class="col text-start" *ngIf="loading">
+            <span class="text-white h4 mb-0 me-1">
+              <div
+                class="spinner-border spinner-border-sm mx-1"
+                role="status"
+              ></div>
+              Fetching best price...
+            </span>
+          </div>
+          <div class="col-auto mr-auto">
+            <i class="fe fe-chevron-up text-secondary"></i>
+            <i class="fe fe-chevron-down text-secondary"></i>
+          </div>
+        </div>
+      </a>
+      <div class="collapse" id="collapseExample">
+        <div class="card">
+          <div class="table-responsive p-4">
+            <table class="table mb-0" *ngIf="trade">
+              <tbody>
+                <tr>
+                  <td class="px-0 py-1 text-white border-0 small">
+                    Expected Output
+                  </td>
+                  <td class="px-0 py-1 text-white text-end border-0 small">
+                    <h4 class="mb-0">
+                      {{ trade.tokenAmountOut.dp(6).toPrecision() }} {{ toToken.symbol }}
+                    </h4>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="px-0 py-1 text-white border-0 small">
+                    Price Impact
+                  </td>
+                  <td class="px-0 py-1 text-white text-end border-0 small">
+                    <h4 class="mb-0">{{ trade.priceImpact.toFormat(2) }}%</h4>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="px-0 py-1 text-white border-0 small">
+                    Minimum received after slippage ({{ (slippage / 100).toFixed(2) }}%)
+                  </td>
+                  <td class="px-0 py-1 text-white text-end border-0 small">
+                    <h4 class="mb-0">
+                      {{ trade.minAmountOut.dp(6).toPrecision() }} {{ toToken.symbol }}
+                    </h4>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <button
+        type="button"
+        class="btn btn-primary btn-lg w-100 mt-3 ms-0"
+        [disabled]="!canSwap() || loading"
+        (click)="actionHandler()"
+        *ngIf="wallet.userAddress"
+      >
+        {{ swapMessage() }}
+      </button>
+      <button
+        type="button"
+        class="btn btn-primary btn-lg w-100 mt-3 ms-0"
+        (click)="openWalletModal()"
+        *ngIf="!wallet.userAddress"
+      >
+        Connect a Wallet
+      </button>
+    </div>
+  </div>
+</div>

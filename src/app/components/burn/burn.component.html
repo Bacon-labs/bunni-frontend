@@ -1,0 +1,347 @@
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-12 col-lg-8">
+      <div class="row align-items-center justify-content-between">
+        <div class="col">
+          <h1>Burn PYT (or xPYT) & NYT</h1>
+        </div>
+      </div>
+      <div class="card card-inner-shadow mb-0">
+        <div class="card-header py-4">
+          <div class="row align-items-center justify-content-between">
+            <div class="col">
+              <h2 class="h5 mb-0 text-uppercase text-secondary">From</h2>
+            </div>
+          </div>
+        </div>
+        <div class="card-body py-0">
+          <div class="row g-3 align-items-start">
+            <div class="col-6">
+              <span
+                style="cursor: pointer;"
+                (click)="openTokenSelectModal('nyt')"
+              >
+                <div class="row g-3 align-items-center">
+                  <div class="col-auto">
+                    <div class="avatar">
+                      <img
+                        [src]="selectedVault.nyt.iconPath"
+                        alt="{{ selectedVault.nyt.symbol }} Icon"
+                        class="avatar-img rounded-circle border-nyt"
+                        onerror="this.src = 'assets/img/tokens/unknown.svg'"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-9">
+                    <div class="d-flex align-items-center">
+                      <h3 class="mb-1 name text-white text-truncate me-2">
+                        {{ selectedVault.nyt.symbol }}
+                      </h3>
+                      <span class="fe fe-chevron-down text-white"></span>
+                    </div>
+                    <p class="small mb-0 text-secondary mb-0">
+                      via
+                      {{
+                        gateService.getGateName(
+                          selectedGate.address,
+                          wallet.chainId
+                        )
+                      }}
+                    </p>
+                  </div>
+                  <!-- <div class="col-auto">
+                    <span class="fe fe-chevron-down text-white"></span>
+                  </div> -->
+                </div>
+              </span>
+            </div>
+            <div class="col-6 text-end">
+              <h2 class="mb-1 name text-white text-truncate">
+                <label for="burn-amount" class="form-label d-none">
+                  Burn Amount
+                </label>
+                <input
+                  type="text"
+                  class="form-control form-control-flush form-control-md input-sm text-end w-100"
+                  name="burn-amount"
+                  id="burn-amount"
+                  aria-describedby="helpId"
+                  placeholder="0.00"
+                  [value]="nytAmount.toFixed()"
+                  (input)="setBurnAmount($event.target.value, false)"
+                  autocomplete="off"
+                />
+              </h2>
+              <p class="small mb-0 text-secondary">
+                Balance: {{ nytBalance.toFormat(4) }}
+                <button
+                  class="btn btn-sm btn-link pt-0 px-0"
+                  (click)="setBurnAmount(nytBalance, false)"
+                >
+                  Max
+                </button>
+              </p>
+            </div>
+          </div>
+          <div class="row g-3 align-items-start my-3">
+            <div class="col-6">
+              <span
+                style="cursor: pointer;"
+                (click)="openTokenSelectModal(useWrappedPYT ? 'xpyt' : 'pyt')"
+              >
+                <div class="row g-3 align-items-center">
+                  <div class="col-auto">
+                    <div class="avatar">
+                      <img
+                        [src]="
+                          useWrappedPYT
+                            ? selectedXPYT.iconPath
+                            : selectedVault.pyt.iconPath
+                        "
+                        alt="{{ selectedVault.pyt.symbol }} Icon"
+                        class="avatar-img rounded-circle border-pyt"
+                        onerror="this.src = 'assets/img/tokens/unknown.svg'"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-9">
+                    <div class="d-flex align-items-center">
+                      <h3 class="mb-1 name text-white text-truncate me-2">
+                        {{
+                          useWrappedPYT
+                            ? selectedXPYT.symbol
+                            : selectedVault.pyt.symbol
+                        }}
+
+                      </h3>
+                      <span class="fe fe-chevron-down text-white"></span>
+                    </div>
+                    <p class="small mb-0 text-secondary mb-0">
+                      via
+                      {{
+                        gateService.getGateName(
+                          selectedGate.address,
+                          wallet.chainId
+                        )
+                      }}
+                      <span class="ms-1">
+                        ({{
+                          useWrappedPYT
+                            ? selectedXPYT.address.slice(0, 5)
+                            : selectedVault.pyt.address.slice(0, 5)
+                        }}...{{
+                          useWrappedPYT
+                            ? selectedXPYT.address.slice(38, 42)
+                            : selectedVault.pyt.address.slice(38, 42)
+                        }})
+                      </span>
+                      <a
+                        href="{{ constants.CHAIN_METADATA[wallet.chainId].blockExplorerUrls[0] }}/address/{{ useWrappedPYT ? selectedXPYT.address : selectedVault.pyt.address }}"
+                        target="_blank"
+                        class="fe fe-external-link text-secondary"
+                        (click)="$event.stopPropagation()">
+                      </a>
+                    </p>
+                  </div>
+                  <!-- <div class="col-auto">
+                    <span class="fe fe-chevron-down text-white"></span>
+                  </div> -->
+                </div>
+              </span>
+            </div>
+            <div class="col-6 text-end">
+              <h2 class="mb-1 name text-white text-truncate">
+                <label for="burn-amount" class="form-label d-none">
+                  Burn Amount
+                </label>
+                <input
+                  type="text"
+                  class="form-control form-control-flush form-control-md input-sm text-end w-100"
+                  name="burn-amount"
+                  id="burn-amount"
+                  aria-describedby="helpId"
+                  placeholder="0.00"
+                  [value]="pytAmount.toFixed()"
+                  (input)="setBurnAmount($event.target.value, true)"
+                  autocomplete="off"
+                />
+              </h2>
+              <p class="small mb-0 text-secondary">
+                Balance: {{ pytBalance.toFormat(4) }}
+                <button
+                  class="btn btn-sm btn-link pt-0 px-0"
+                  (click)="setBurnAmount(pytBalance, true)"
+                >
+                  Max
+                </button>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row justify-content-center align-items-center my-n3">
+        <button
+          type="button"
+          class="btn btn-rounded-circle btn-switch"
+          routerLink="/mint"
+        >
+          <i class="fe fe-arrow-down"></i>
+        </button>
+        <button type="submit" class="btn btn-link d-none">
+          <i class="fe fe-arrow-up"></i>
+        </button>
+      </div>
+
+      <!-- TO -->
+      <div class="card card-inner-shadow mb-0">
+        <div class="card-header py-4">
+          <div class="row align-items-center justify-content-between">
+            <div class="col-auto">
+              <h2 class="h5 mb-0 text-uppercase text-secondary">To</h2>
+            </div>
+          </div>
+        </div>
+        <div class="card-body py-0">
+          <div class="row g-3 align-items-start mb-3">
+            <div class="col-6">
+              <div class="row g-3 align-items-center">
+                <div class="col-auto">
+                  <div class="avatar">
+                    <img
+                      [src]="selectedToken.iconPath"
+                      alt="{{ selectedToken.symbol }} Icon"
+                      class="avatar-img rounded-circle"
+                      onerror="this.src = 'assets/img/tokens/unknown.svg'"
+                    />
+                  </div>
+                </div>
+                <div class="col-9">
+                  <h3 class="mb-1 text-white text-truncate">
+                    {{ selectedToken.symbol }}
+                  </h3>
+                  <p class="small mb-0 text-secondary text-truncate" title="{{ selectedToken.name }}">
+                    {{ selectedToken.name }}
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="col-6 text-end">
+              <h3 class="mb-1 text-white text-truncate">
+                {{ underlyingReceived.toFixed() }}
+              </h3>
+              <p class="small mb-0 text-secondary">
+                ${{ underlyingReceived.times(underlyingPriceUSD).toFixed(2) }}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- END TO -->
+
+      <!-- ADVANCED SETTINGS -->
+      <a
+        class="btn w-100 p-0"
+        data-bs-toggle="collapse"
+        href="#advancedSettings"
+        role="button"
+        aria-expanded="false"
+        aria-controls="advancedSettings"
+      >
+        <div class="row my-3">
+          <div class="col text-start">
+            <span class="text-secondary h4 mb-0 me-1">Advanced Settings</span>
+          </div>
+          <div class="col-auto mr-auto">
+            <i class="fe fe-chevron-up text-secondary"></i>
+            <i class="fe fe-chevron-down text-secondary"></i>
+          </div>
+        </div>
+      </a>
+      <div class="collapse" id="advancedSettings">
+        <div class="card">
+          <div class="table-responsive p-4">
+            <table class="table mb-0">
+              <tbody>
+                <tr>
+                  <td class="px-0 py-1 text-white border-0 small">
+                    Receive Vault Shares
+                    <i
+                      class="fe fe-info align-bottom"
+                      tooltipClass="ms-2"
+                      placement="right"
+                      ngbTooltip="Receive vault shares ({{
+                        selectedVault.share.symbol
+                      }}) instead of {{
+                        selectedVault.underlying.symbol
+                      }} when you burn."
+                    ></i>
+                  </td>
+                  <td class="px-0 py-1 text-white text-end border-0 small">
+                    <div
+                      class="form-check form-switch d-flex justify-content-end"
+                    >
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        id="useVaultSharesToggle"
+                        [checked]="useVaultShares"
+                        (change)="toggleUseVaultShares()"
+                      />
+                    </div>
+                  </td>
+                </tr>
+                <tr *ngIf="selectedVault.xpyt.length > 0">
+                  <td class="px-0 py-1 text-white border-0 small">
+                    Burn xPYT
+                    <i
+                      class="fe fe-info align-bottom"
+                      tooltipClass="ms-2"
+                      placement="right"
+                      ngbTooltip="Burn using xPYT instead of PYT."
+                    ></i>
+                  </td>
+                  <td class="px-0 py-1 text-white text-end border-0 small">
+                    <div
+                      class="form-check form-switch d-flex justify-content-end"
+                    >
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        id="useWrappedPYT"
+                        [checked]="useWrappedPYT"
+                        (change)="toggleUseWrappedPYT()"
+                      />
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <!-- END ADVANCED SETTINGS -->
+
+      <!-- ACTIONS -->
+      <button
+        type="button"
+        class="btn btn-primary btn-lg w-100 ms-0"
+        [disabled]="!canBurn()"
+        (click)="actionHandler()"
+        *ngIf="wallet.userAddress"
+      >
+        <ng-container>
+          {{ burnMessage() }}
+        </ng-container>
+      </button>
+      <button
+        type="button"
+        class="btn btn-primary btn-lg w-100 ms-0"
+        (click)="openWalletModal()"
+        *ngIf="!wallet.userAddress"
+      >
+        Connect a Wallet
+      </button>
+      <!-- END ACTIONS -->
+    </div>
+  </div>
+</div>

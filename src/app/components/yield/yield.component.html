@@ -1,0 +1,456 @@
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-12">
+      <div class="row align-items-center justify-content-between">
+        <div class="col">
+          <h1>Boosted yield opportunities</h1>
+        </div>
+      </div>
+      <div class="card bg-transparent shadow-none border-0">
+        <div class="card-body p-0">
+          <div class="table-responsive">
+            <!-- <table class="table table-sm mb-0">
+              <thead>
+                <tr>
+                  <th class="pb-0" scope="col">
+                    Asset
+                  </th>
+                  <th class="pb-0" scope="col">
+                    APY / Leverage
+                  </th>
+                  <th class="pb-0" scope="col"></th>
+                  <th class="pb-0" scope="col"></th>
+                </tr>
+              </thead>
+              <tbody class="list">
+                <tr class="table-row-inner-shadow">
+                  <td>
+                    <div class="d-flex align-items-center">
+                      <div class="avatar avatar-xs me-3">
+                        <img
+                          alt="..."
+                          class="avatar-img rounded-circle"
+                          src="./assets/img/chains/ethereum-icon.png"
+                        />
+                      </div>
+                      <div class="ml-3">
+                        <h4 class="fw-normal mb-1">TKN</h4>
+                        <small class="text-muted">TKN name</small>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <h4 class="fw-normal mb-1">0.00%</h4>
+                    <p class="fw-normal small mb-0 text-secondary">0.0 x</p>
+                  </td>
+                  <td
+                    class="d-flex align-items-center justify-content-end"
+                    colspan="2"
+                  >
+                    <button
+                      type="submit"
+                      class="btn btn-primary btn-sm me-3"
+                      data-bs-toggle="modal"
+                      data-bs-target="#ModalDeposit"
+                    >
+                      Deposit
+                    </button>
+                    <button
+                      type="submit"
+                      class="btn btn-dark btn-sm"
+                      data-bs-toggle="modal"
+                      data-bs-target="#"
+                    >
+                      Withdraw
+                    </button>
+                  </td>
+                </tr>
+                <tr class="table-row-inner-shadow">
+                  <td>
+                    <div class="d-flex align-items-center">
+                      <div class="avatar avatar-xs me-3">
+                        <img
+                          alt="..."
+                          class="avatar-img rounded-circle"
+                          src="./assets/img/chains/ethereum-icon.png"
+                        />
+                      </div>
+                      <div class="ml-3">
+                        <h4 class="fw-normal mb-1">TKN</h4>
+                        <small class="text-muted">TKN name</small>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <h4 class="fw-normal mb-1">0.00%</h4>
+                    <p class="fw-normal small mb-0 text-secondary">0.0 x</p>
+                  </td>
+                  <td
+                    class="d-flex align-items-center justify-content-end"
+                    colspan="2"
+                  >
+                    <button
+                      type="submit"
+                      class="btn btn-primary btn-sm me-3"
+                      data-bs-toggle="modal"
+                      data-bs-target="#ModalDeposit"
+                    >
+                      Deposit
+                    </button>
+                    <button
+                      type="submit"
+                      class="btn btn-dark btn-sm"
+                      data-bs-toggle="modal"
+                      data-bs-target="#"
+                    >
+                      Withdraw
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table> -->
+
+            <mat-table multiTemplateDataRows [dataSource]="data">
+              <ng-container matColumnDef="asset">
+                <mat-header-cell *matHeaderCellDef class="col-4"
+                  >Asset</mat-header-cell
+                >
+                <mat-cell *matCellDef="let data" class="col-4">
+                  <div class="d-flex align-items-center">
+                    <div class="avatar avatar-xs">
+                      <img
+                        alt="..."
+                        class="avatar-img rounded-circle me-3"
+                        [src]="data.underlying.iconPath"
+                      />
+                    </div>
+                    <div class="ms-3">
+                      <h4 class="fw-normal mb-1">
+                        {{ data.underlying.symbol }}
+                      </h4>
+                      <p class="fw-normal fs-5 small mb-0 text-secondary">
+                        {{ data.underlying.name }}
+                      </p>
+                    </div>
+                  </div>
+                </mat-cell>
+                <mat-footer-cell *matFooterCellDef></mat-footer-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="apy">
+                <mat-header-cell *matHeaderCellDef>APY</mat-header-cell>
+                <mat-cell *matCellDef="let data" class="">
+                  {{ data.apy.toFormat(2) }}%
+                </mat-cell>
+                <mat-footer-cell *matFooterCellDef></mat-footer-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="leverage" class="">
+                <mat-header-cell *matHeaderCellDef>Boost</mat-header-cell>
+                <mat-cell *matCellDef="let data" class="">
+                  {{ data.leverage.toFormat(2) }}x
+                </mat-cell>
+                <mat-footer-cell *matFooterCellDef></mat-footer-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="deposits" class="">
+                <mat-header-cell *matHeaderCellDef>My Deposits</mat-header-cell>
+                <mat-cell *matCellDef="let data" class="">
+                  {{ data.xpytBalance.toFormat(2) }} {{ data.xpyt.symbol }}
+                </mat-cell>
+                <mat-footer-cell *matFooterCellDef></mat-footer-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="actions">
+                <mat-header-cell *matHeaderCellDef></mat-header-cell>
+                <mat-cell *matCellDef="let data" class="justify-content-end" style="cursor: pointer">
+                  <span
+                    class="fe text-white"
+                    [ngClass]="
+                      data.expandedDetails ? 'fe-chevron-up' : 'fe-chevron-down'
+                    "
+                  ></span>
+                </mat-cell>
+                <mat-footer-cell *matFooterCellDef></mat-footer-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="expandedDetails">
+                <mat-header-cell *matHeaderCellDef></mat-header-cell>
+                <mat-cell
+                  *matCellDef="let data"
+                  class="d-flex flex-column align-items-start p-0"
+                >
+                  <!-- Nav -->
+                  <ul class="nav nav-tabs w-100 px-4 border-dark" id="myTab" role="tablist">
+                    <li class="nav-item" role="presentation" (click)="switchTab(data, 0)">
+                      <button class="nav-link" [ngClass]="{ 'active': data.tab === 0 }">Deposit</button>
+                    </li>
+                    <li class="nav-item" role="presentation" (click)="switchTab(data, 1)">
+                      <button class="nav-link" [ngClass]="{ 'active': data.tab === 1 }">Withdraw</button>
+                    </li>
+                    <li class="nav-item" role="presentation" (click)="switchTab(data, 2)">
+                    <button class="nav-link" [ngClass]="{ 'active': data.tab === 2 }">Info</button>
+                    </li>
+                  </ul>
+                  <div class="tab-content p-4" id="myTabContent">
+                    <div *ngIf="data.tab === 0" class="tab-pane fade" [ngClass]="{ 'show active': data.tab === 0 }" role="tabpanel" tabindex="0">
+                      <div class="row">
+                        <div class="col-12 col-lg-6">
+                          <p class="lead">
+                            Deposit your assets into Timeless to earn boosted yield.
+                            You will receive xPYT, which auto-compounds the yield
+                            you earn back into your position.
+                          </p>
+                          <small class="fst-italic text-secondary">
+                            Note: The value of your position will go up when the
+                            yield rate goes up and go down when the yield rate goes
+                            down. This is the risk of yield boosting. A fee of 10%
+                            is taken from the yield by Timeless, and additional fees
+                            on yield may be paid during xPYT's auto-compounding
+                            process.
+                          </small>
+                        </div>
+                        <div class="col-12 col-lg-6">
+                          <div class="card card-inner-shadow">
+                            <div class="card-body py-2">
+                              <div class="row align-items-top my-3">
+                                <div class="col">
+                                  <div class="row align-items-center">
+                                    <div class="col-auto">
+                                      <div class="avatar">
+                                        <img [src]="data.underlying.iconPath" alt="{{ data.underlying.symbol }} Icon"
+                                          class="avatar-img rounded-circle" />
+                                      </div>
+                                    </div>
+                                    <div class="col-auto text-truncate ms-n2">
+                                      <h3 class="mb-1 name text-white text-truncate">
+                                        {{ data.underlying.symbol }}
+                                      </h3>
+                                      <p class="small mb-0 text-secondary">
+                                        $0.00
+                                      </p>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="col text-end">
+                                  <h2 class="mb-1 name text-white text-truncate">
+                                    <label for="deposit-amount" class="form-label d-none">
+                                      Deposit amount
+                                    </label>
+                                    <input 
+                                    class="form-control form-control-flush form-control-md input-sm text-end w-100"
+                                    type="text"
+                                    name="deposit-amount"
+                                    id="deposit-amount"
+                                    aria-describedby="helpId"
+                                    [value]="data.depositAmount.toFixed()"
+                                    (input)="setDepositAmount(data, $event.target.value)"
+                                    placeholder="0.00"
+                                    autocomplete="off"
+                                    />
+                                  </h2>
+                                  <p class="small mb-0 text-secondary">
+                                    Balance: {{ data.underlyingBalance.toFormat(4) }} {{ data.underlying.symbol }}
+                                    <button class="btn btn-sm btn-link pt-0 px-0" (click)="setDepositAmount(data, data.underlyingBalance)">
+                                      Max
+                                    </button>
+                                  </p>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-12 col-lg-6">
+                              <button
+                                type="button"
+                                name="button"
+                                class="btn btn-lg w-100"
+                                [disabled]="!canApprove(data)"
+                                [ngClass]="!hasApproval(data) ? 'btn-primary' : 'btn-success'"
+                                (click)="approve(data)"
+                              >
+                                <ng-container *ngIf="!hasApproval(data)">Approve</ng-container>
+                                <ng-container *ngIf="hasApproval(data)">Approved</ng-container>
+                              </button>
+                            </div>
+                            <div class="col-12 col-lg-6">
+                              <button
+                                type="button"
+                                name="button"
+                                class="btn btn-lg ms-2 w-100"
+                                [ngClass]="!canDeposit(data) ? 'btn-dark' : 'btn-primary'"
+                                (click)="deposit(data)"
+                                [disabled]="!canDeposit(data)"
+                              >
+                                <ng-container *ngIf="!data.loading">
+                                  Deposit
+                                </ng-container>
+                                <ng-container *ngIf="data.loading">
+                                  <div class="spinner-grow spinner-grow-sm text-white" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                  </div>
+                                </ng-container>
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div *ngIf="data.tab === 1" class="tab-pane fade" [ngClass]="{ 'show active': data.tab === 1 }" role="tabpanel" tabindex="0">
+                      <div class="row">
+                        <div class="col-12 col-lg-6">
+                          <p class="lead">
+                            Withdraw assets from your position. You will swap xPYT back into the underlying asset.
+                          </p>
+                        </div>
+                        <div class="col-12 col-lg-6">
+                          <div class="card card-inner-shadow">
+                            <div class="card-body py-2">
+                              <div class="row align-items-top my-3">
+                                <div class="col">
+                                  <div class="row align-items-center">
+                                    <div class="col-auto">
+                                      <div class="avatar">
+                                        <img [src]="data.xpyt.iconPath" alt="{{ data.xpyt.symbol }} Icon"
+                                          class="avatar-img rounded-circle border-pyt" />
+                                      </div>
+                                    </div>
+                                    <div class="col-auto text-truncate ms-n2">
+                                      <h3 class="mb-1 name text-white text-truncate">
+                                        {{ data.xpyt.symbol }}
+                                      </h3>
+                                      <p class="small mb-0 text-secondary">
+                                        $0.00
+                                      </p>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="col text-end">
+                                  <h2 class="mb-1 name text-white text-truncate">
+                                    <label for="withdraw-amount" class="form-label d-none">
+                                      Withdraw amount
+                                    </label>
+                                    <input 
+                                    class="form-control form-control-flush form-control-md input-sm text-end w-100"
+                                    type="text"
+                                    name="withdraw-amount"
+                                    id="withdraw-amount"
+                                    aria-describedby="helpId"
+                                    [value]="data.withdrawAmount.toFixed()"
+                                    (input)="setWithdrawAmount(data, $event.target.value)"
+                                    placeholder="0.00"
+                                    autocomplete="off"
+                                    />
+                                  </h2>
+                                  <p class="small mb-0 text-secondary">
+                                    Balance: {{ data.xpytBalance.toFormat(4) }} {{ data.xpyt.symbol }}
+                                    <button class="btn btn-sm btn-link pt-0 px-0" (click)="setWithdrawAmount(data, data.xpytBalance)">
+                                      Max
+                                    </button>
+                                  </p>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-12 col-lg-6">
+                              <button
+                                type="button"
+                                name="button"
+                                class="btn btn-lg w-100"
+                                [disabled]="!canApprove(data)"
+                                [ngClass]="!hasApproval(data) ? 'btn-primary' : 'btn-success'"
+                                (click)="approve(data)"
+                              >
+                                <ng-container *ngIf="!hasApproval(data)">Approve</ng-container>
+                                <ng-container *ngIf="hasApproval(data)">Approved</ng-container>
+                              </button>
+                            </div>
+                            <div class="col-12 col-lg-6">
+                              <button
+                                type="button"
+                                name="button"
+                                class="btn btn-lg ms-2 w-100"
+                                [ngClass]="!canWithdraw(data) ? 'btn-dark' : 'btn-primary'"
+                                (click)="withdraw(data)"
+                                [disabled]="!canWithdraw(data)"
+                              >
+                                <ng-container *ngIf="!data.loading">
+                                  Withdraw
+                                </ng-container>
+                                <ng-container *ngIf="data.loading">
+                                  <div class="spinner-grow spinner-grow-sm text-white" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                  </div>
+                                </ng-container>
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div *ngIf="data.tab === 2" class="tab-pane fade" [ngClass]="{ 'show active': data.tab === 2 }" role="tabpanel" tabindex="0">
+                      <div class="list-group">
+                        <a href="{{
+                          constants.CHAIN_METADATA[wallet.chainId]
+                            .blockExplorerUrls[0]
+                          }}/address/{{ data.xpyt.address }}" class="list-group-item list-group-item-action" target="_blank">
+                          xPYT address: {{ data.xpyt.address }}
+                        </a>
+                        <a href="{{
+                          constants.CHAIN_METADATA[wallet.chainId]
+                            .blockExplorerUrls[0]
+                        }}/address/{{ data.gate }}" class="list-group-item list-group-item-action" target="_blank">Asset address: {{ data.underlying.address }}</a>
+                        <a href="#" class="list-group-item list-group-item-action" target="_blank">
+                          Deposit contract address: {{ data.gate }}
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </mat-cell>
+                <mat-footer-cell *matFooterCellDef></mat-footer-cell>
+              </ng-container>
+
+              <mat-header-row
+                *matHeaderRowDef="[
+                  'asset',
+                  'apy',
+                  'leverage',
+                  'deposits',
+                  'actions'
+                ]"
+                class="mb-0 text-uppercase text-secondary h6 border-0"
+              >
+              </mat-header-row>
+
+              <mat-row
+                *matRowDef="
+                  let data;
+                  columns: ['asset', 'apy', 'leverage', 'deposits', 'actions']
+                "
+                (click)="expandDetails(data)"
+                [ngClass]="{ 'selected rounded-top': data.expandedDetails }"
+                [ngClass]="{ 'rounded mb-3': !data.expandedDetails }"
+                class="table-row-inner-shadow py-3"
+              >
+              </mat-row>
+
+              <mat-row
+                *matRowDef="let data; columns: ['expandedDetails']"
+                class="expandedDetails table-row-inner-shadow mb-3"
+                [hidden]="!data.expandedDetails"
+              >
+              </mat-row>
+
+              <div *matNoDataRow class="no-data-row text-center table-row-inner-shadow py-3 rounded">
+                <div class="spinner-grow text-white" role="status">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+              </div>
+            </mat-table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

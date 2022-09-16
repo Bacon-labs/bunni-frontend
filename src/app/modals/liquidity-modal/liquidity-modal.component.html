@@ -1,0 +1,513 @@
+<div class="modal-content">
+  <div class="modal-card card">
+    <div class="card-header border-bottom border-dark">
+      <div class="row align-items-center">
+        <div class="col">
+          <h2 class="card-header-title text-truncate">
+            {{ pool.xpyt.symbol }} / {{ pool.nyt.symbol }}
+
+            <span class="badge bg-secondary-soft mb-2 mx-2">
+              {{ pool.fee.div(10000).toFormat() }}% Fee Tier
+              <a href="{{ constants.CHAIN_METADATA[wallet.chainId].blockExplorerUrls[0] }}/address/{{ pool.address }}"
+                target="_blank" class="fe fe-external-link text-white text-mutednms-1"
+                (click)="$event.stopPropagation()">
+              </a>
+            </span>
+          </h2>
+        </div>
+        <div class="col-auto px-0">
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+            (click)="activeModal.dismiss()"></button>
+        </div>
+      </div>
+    </div>
+    <div class="card-header border-bottom border-dark">
+      <div class="row align-items-center">
+        <div class="col">
+          <ul class="nav nav-tabs border-0" id="myTab" role="tablist">
+            <li class="nav-item ps-0" role="presentation">
+              <button class="nav-link" [ngClass]="{ active: tab === 0 }" (click)="switchTab(0)" id="deposit-tab"
+                data-bs-toggle="tab" data-bs-target="#deposit" type="button" role="tab" aria-controls="deposit"
+                aria-selected="false">
+                Add Liquidity
+              </button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" [ngClass]="{ active: tab === 1 }" (click)="switchTab(1)" id="withdraw-tab"
+                data-bs-toggle="tab" data-bs-target="#withdraw" type="button" role="tab" aria-controls="withdraw"
+                aria-selected="false">
+                Remove Liquidity
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show" [ngClass]="{ active: tab === 0 }" id="deposit" role="tabpanel"
+          aria-labelledby="deposit-tab">
+
+          <div class="row">
+            <div class="col-12 col-lg-6">
+              <!-- xPYT Input -->
+              <div class="card card-inner-shadow mb-0">
+                <div class="card-header py-4">
+                  <h2 class="h5 mb-0 text-uppercase text-secondary">xPYT Amount</h2>
+                </div>
+                <div class="card-body py-0 pb-3">
+                  <div class="input-group mb-0">
+                    <input type="text"
+                      class="form-control form-control-flush form-control-lg input-lg text-start mb-0 py-0"
+                      name="xpyt-amount" id="xpyt-amount" aria-describedby="helpId" placeholder="0.00"
+                      [value]="xpytAmount" (input)="setAmount($event.target.value, true)" autocomplete="off" />
+                    <span class="input-group-text bg-transparent pe-1 py-0">
+                      <div class="avatar avatar-xs">
+                        <img src="{{ pool.xpyt.iconPath }}" alt="{{ pool.xpyt.symbol }} Icon"
+                          class="avatar-img rounded-circle border-pyt-xs"
+                          onerror="this.src = 'assets/img/tokens/unknown.svg'" />
+                      </div>
+                    </span>
+                    <span class="input-group-text bg-transparent ps-1 pe-0 py-0">
+                      xPYT
+                    </span>
+                  </div>
+                  <div class="row align-items-center">
+                    <div class="col">
+
+                      <small class="form-text mb-0" *ngIf="xpytAmount.times(xpytUSD).gt(0)">
+                        ${{ xpytAmount.times(xpytUSD).toFormat(4) }}
+                      </small>
+
+                    </div>
+                    <div class="col-auto">
+                      <small class="text-muted">
+                        Balance: {{ xpytBalance.toFormat(4) }}
+                      </small>
+                      <button type="button" class="btn btn-sm btn-dark ms-2" (click)="setAmount(xpytBalance, true)">
+                        Max
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- End xPYT Input -->
+
+            </div>
+            <div class="col-12 col-lg-6">
+              <!-- NYT Input -->
+              <div class="card card-inner-shadow mb-0">
+                <div class="card-header py-4">
+                  <h2 class="h5 mb-0 text-uppercase text-secondary">NYT Amount</h2>
+                </div>
+                <div class="card-body py-0 pb-3">
+                  <div class="input-group mb-0">
+                    <input type="text"
+                      class="form-control form-control-flush form-control-lg input-lg text-start mb-0 py-0"
+                      name="nyt-amount" id="nyt-amount" aria-describedby="helpId" placeholder="0.00" [value]="nytAmount"
+                      (input)="setAmount($event.target.value, false)" autocomplete="off" />
+                    <span class="input-group-text bg-transparent pe-1 py-0">
+                      <div class="avatar avatar-xs">
+                        <img src="{{ pool.nyt.iconPath }}" alt="{{ pool.nyt.symbol }} Icon"
+                          class="avatar-img rounded-circle border-nyt-xs"
+                          onerror="this.src = 'assets/img/tokens/unknown.svg'" />
+                      </div>
+                    </span>
+                    <span class="input-group-text bg-transparent ps-1 pe-0 py-0">
+                      NYT
+                    </span>
+                  </div>
+                  <div class="row align-items-center">
+                    <div class="col">
+
+                      <small class="form-text mb-0" *ngIf="nytAmount.times(nytUSD).gt(0)">
+                        ${{ nytAmount.times(nytUSD).toFormat(4) }}
+                      </small>
+
+                    </div>
+                    <div class="col-auto">
+                      <small class="text-muted">
+                        Balance {{ nytBalance.toFormat(4) }}
+                      </small>
+                      <button type="button" class="btn btn-sm btn-dark ms-2" (click)="setAmount(nytBalance, false)">
+                        Max
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- NYT Input -->
+
+            </div>
+          </div>
+
+
+          <!--AdvancedSetting-->
+          <a class="btn w-100 px-0" data-bs-toggle="collapse" href="#collapseAdvancedSettings" role="button"
+            aria-expanded="false" aria-controls="collapseAdvancedSettings">
+            <div class="row mt-3">
+              <div class="col text-start">
+                <span class="text-white h4 mb-0 me-1">
+                  Advanced Settings
+                </span>
+              </div>
+              <div class="col-auto mr-auto">
+                <i class="fe fe-chevron-up text-secondary"></i>
+                <i class="fe fe-chevron-down text-secondary"></i>
+              </div>
+            </div>
+          </a>
+
+          <div class="collapse" id="collapseAdvancedSettings">
+            <div class="row align-items-center mb-2">
+              <div class="col">
+                <label>
+                  Price Range
+                </label>
+              </div>
+              <div class="col-auto">
+                <small class="text-muted">
+                  Current Price: {{ nytPrice.toFormat(5) }} NYT per xPYT
+                </small>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12 col-lg-6">
+
+                <div class="card card-inner-shadow">
+                  <div class="card-body justify-content-center text-center">
+                    <p class="small mb-0 text-secondary">
+                      Min Price
+                    </p>
+                    <div class="d-flex justify-content-between">
+                      <button class="btn btn-dark btn-sm m-0 ms-2" (click)="setTick(false, false)">-</button>
+                      <span class="d-flex align-items-center">
+                        <input type="text" class="form-control form-control-flush form-control-md input-sm text-center"
+                          name="nyt-amount" id="nyt-amount" aria-describedby="helpId" placeholder="0.00"
+                          [value]="priceLower" (input)="setPrice($event.target.value, false)" autocomplete="off" />
+                      </span>
+                      <button class="btn btn-dark btn-sm m-0 me-2" (click)="setTick(false, true)">+</button>
+                    </div>
+                    <p class="small mb-0 text-secondary">
+                      NYT per xPYT
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12 col-lg-6">
+
+                <div class="card card-inner-shadow">
+                  <div class="card-body justify-content-center text-center">
+                    <p class="small mb-0 text-secondary">
+                      Max Price
+                    </p>
+                    <div class="d-flex justify-content-between">
+                      <button class="btn btn-dark btn-sm m-0 me-2" (click)="setTick(true, false)">-</button>
+                      <span class="d-flex align-items-center">
+                        <input type="text" class="form-control form-control-flush form-control-md input-sm text-center"
+                          name="nyt-amount" id="nyt-amount" aria-describedby="helpId" placeholder="0.00"
+                          [value]="priceUpper" (input)="setPrice($event.target.value, true)" autocomplete="off" />
+                      </span>
+                      <button class="btn btn-dark btn-sm m-0 me-2" (click)="setTick(true, true)">+</button>
+                    </div>
+                    <p class="small mb-0 text-secondary">
+                      NYT per xPYT
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+          <!-- ACTIONS -->
+          <div class="d-flex"
+            *ngIf="xpytAmount.gt(0) && nytAmount.gt(0) && xpytAmount.lte(xpytBalance) && nytAmount.lte(nytBalance)">
+            <span class="pe-1 col-6">
+              <button type="button" class="btn btn-lg w-100 ms-0 mt-2"
+                [ngClass]="xpytApproved() ? 'btn-success' : 'btn-primary'" [disabled]="xpytApproved()"
+                (click)="approve(true)">
+                Approve xPYT
+              </button>
+            </span>
+            <span class="ps-1 col-6">
+              <button type="button" class="btn btn-lg w-100 ms-0 mt-2"
+                [ngClass]="nytApproved() ? 'btn-success' : 'btn-primary'" [disabled]="nytApproved()"
+                (click)="approve(false)">
+                Approve NYT
+              </button>
+            </span>
+          </div>
+
+          <button type="button" class="btn btn-primary btn-lg w-100 ms-0 mt-2" (click)="deposit()"
+            [disabled]="!canDeposit()">
+            {{ depositMessage() }}
+          </button>
+          <!-- END ACTIONS -->
+
+
+        </div>
+
+        <div class="tab-pane fade show" [ngClass]="{ active: tab === 1 }" id="withdraw" role="tabpanel"
+          aria-labelledby="withdraw-tab">
+          <!--My Pool position list-->
+          <!--pool position 1-->
+          <a class="card card-inner-shadow text-white mb-3" data-bs-toggle="collapse" href="#collapseMyPoolPositions" role="button"
+            aria-expanded="false" aria-controls="collapseMyPoolPositions">
+            <div class="card-body py-3">
+              <div class="row align-items-center">
+                <div class="col-12 col-lg-8 text-start">
+                  <h4 class="mb-1 text-truncate">{{ pool.xpyt.symbol }} / {{ pool.nyt.symbol }}</h4>
+                  <small class="text-secondary">
+                    Min price: 1 NYT per xPYT / Max price: 9 NYT per xPYT
+                  </small>
+                </div>
+                <div class="col-auto me-auto">
+                  <h4 class="mb-1 text-truncate">0.0000</h4>
+                  <small class="text-secondary">$0.00</small>
+                </div>
+                <div class="col-auto mr-auto">
+                  <span class="badge bg-success-soft">In Range</span>
+                  <span class="badge bg-danger-soft d-none">Out of Range</span>
+                </div>
+                <div class="col-auto ">
+                  <i class="fe fe-chevron-up text-secondary"></i>
+                  <i class="fe fe-chevron-down text-secondary"></i>
+                </div>
+              </div>
+            </div>
+          </a>
+          <div class="collapse" id="collapseMyPoolPositions">
+            <div class="row">
+              <div class="col">
+                <!-- Pool token Input -->
+                <div class="card card-inner-shadow mb-0">
+                  <div class="card-header">
+                    <h2 class="h5 mb-0 text-uppercase text-secondary">Amount</h2>
+                  </div>
+                  <div class="card-body pt-0 pb-3">
+                    <div class="input-group mb-0">
+                      <input type="text"
+                        class="form-control form-control-flush form-control-lg input-lg text-start mb-0"
+                        name="poolTokenAmount" id="poolTokenAmount" aria-describedby="helpId" placeholder="0.00"
+                        value="" autocomplete="off" />
+                      <span class="input-group-text bg-transparent ps-1 pe-0">
+                        LP TKN
+                      </span>
+                    </div>
+                    <div class="row align-items-center">
+                      <div class="col-auto">
+                        <button type="button" class="btn btn-sm btn-dark">
+                          0%
+                        </button>
+                        <button type="button" class="btn btn-sm btn-dark ms-2">
+                          25%
+                        </button>
+                        <button type="button" class="btn btn-sm btn-dark ms-2">
+                          50%
+                        </button>
+                        <button type="button" class="btn btn-sm btn-dark ms-2">
+                          75%
+                        </button>
+                        <button type="button" class="btn btn-sm btn-dark ms-2" (click)="setAmount(xpytBalance, true)">
+                          Max
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- Arrow down -->
+                <div class="row justify-content-center align-items-center my-n3">
+                  <button type="button" class="btn btn-rounded-circle btn-switch" tabindex="0">
+                    <i class="fe fe-arrow-down"></i>
+                  </button>
+                </div>
+                <!-- Receive -->
+                <div class="card card-inner-shadow">
+                  <div class="card-body py-3">
+                    <div class="row g-3 align-items-start mb-3">
+                      <div class="col-6">
+                        <div class="row g-3 align-items-center">
+                          <div class="col-auto">
+                            <div class="avatar">
+                              <img src="assets/img/tokens/unknown.svg" alt="selectedToken.symbol Icon"
+                                class="avatar-img rounded-circle" />
+                            </div>
+                          </div>
+                          <div class="col-9">
+                            <h3 class="mb-1 text-white text-truncate">
+                              selectedToken.symbol
+                            </h3>
+                            <p class="small mb-0 text-secondary text-truncate" title="selectedToken.name">
+                              selectedToken.name
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-6 text-end">
+                        <h3 class="mb-1 text-white text-truncate">
+                          0.0000
+                        </h3>
+                        <p class="small mb-0 text-secondary">
+                          $0.00
+                        </p>
+                      </div>
+                    </div>
+                    <div class="row g-3 align-items-start">
+                      <div class="col-6">
+                        <div class="row g-3 align-items-center">
+                          <div class="col-auto">
+                            <div class="avatar">
+                              <img src="assets/img/tokens/unknown.svg" alt="selectedToken.symbol Icon"
+                                class="avatar-img rounded-circle" />
+                            </div>
+                          </div>
+                          <div class="col-9">
+                            <h3 class="mb-1 text-white text-truncate">
+                              selectedToken.symbol
+                            </h3>
+                            <p class="small mb-0 text-secondary text-truncate" title="selectedToken.name">
+                              selectedToken.name
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-6 text-end">
+                        <h3 class="mb-1 text-white text-truncate">
+                          0.0000
+                        </h3>
+                        <p class="small mb-0 text-secondary">
+                          $0.00
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- End receive -->
+                <!--Action-->
+                <button type="button" class="btn btn-primary btn-lg w-100 ms-0 mb-4">Remove Liquidity</button>
+                <!-- End Action -->
+              </div>
+            </div>
+          </div>
+          <!--end pool position 1-->
+          <!--pool position 2-->
+          <a class="card card-inner-shadow text-white mb-3" data-bs-toggle="collapse" href="#" role="button"
+            aria-expanded="false" aria-controls="">
+            <div class="card-body py-3">
+              <div class="row align-items-center">
+                <div class="col-12 col-lg-8 text-start">
+                  <h4 class="mb-1 text-truncate">{{ pool.xpyt.symbol }} / {{ pool.nyt.symbol }}</h4>
+                  <small class="text-secondary">
+                    Min price: 1 NYT per xPYT / Max price: 9 NYT per xPYT
+                  </small>
+                </div>
+                <div class="col-auto me-auto">
+                  <h4 class="mb-1 text-truncate">0.0000</h4>
+                  <small class="text-secondary">$0.00</small>
+                </div>
+                <div class="col-auto mr-auto">
+                  <span class="badge bg-success-soft d-none">In Range</span>
+                  <span class="badge bg-danger-soft">Out of Range</span>
+                </div>
+                <div class="col-auto ">
+                  <i class="fe fe-chevron-up text-secondary"></i>
+                  <i class="fe fe-chevron-down text-secondary"></i>
+                </div>
+              </div>
+            </div>
+          </a>
+          <!--end pool position 2-->
+
+          <!-- <p class="mb-1">
+            Select the Uniswap V3 LP position you want to unstake.
+          </p>
+          <div
+            class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 px-0 mt-0"
+          >
+            <div class="col" *ngFor="let position of userPositions">
+              <ng-container *ngIf="position.incentives.length > 0">
+                <a style="cursor: pointer">
+                  <div
+                    class="card list-nft-item"
+                    [ngClass]="{
+                      selected:
+                        selectedPosition &&
+                        position.id === selectedPosition.id
+                    }"
+                    (click)="selectPosition(position)"
+                  >
+                    <img
+                      src="./assets/img/uniswap-logo.svg"
+                      class="card-img-top"
+                      alt=""
+                    />
+                    <div class="card-img-overlay p-3">
+                      <div class="row align-items-center">
+                        <div class="col">
+                          <div class="form-check form-check-circle">
+                            <input
+                              type="checkbox"
+                              id="cardsCheckboxOne"
+                              class="form-check-input list-checkbox"
+                              [checked]="
+                                selectedPosition &&
+                                position.id === selectedPosition.id
+                              "
+                            />
+                            <label
+                              for="cardsCheckboxOne"
+                              class="form-check-label"
+                            ></label>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="card-body p-3">
+                      <h4 class="mb-0 card-title text-white text-center">
+                        #{{ position.id }}
+                      </h4>
+                    </div>
+                  </div>
+                </a>
+              </ng-container>
+            </div>
+          </div> -->
+        </div>
+      </div>
+      <!-- <button
+        type="button"
+        class="btn btn-primary btn-lg w-100 ms-0"
+        *ngIf="tab === 0"
+        (click)="stake()"
+        [disabled]="!canStake()"
+      >
+        <ng-container *ngIf="!selectedPosition">
+          Select a Position
+        </ng-container>
+        <ng-container
+          *ngIf="selectedPosition && availableIncentives.length > 0"
+        >
+          Stake
+        </ng-container>
+        <ng-container
+          *ngIf="selectedPosition && availableIncentives.length == 0"
+        >
+          Position already staked
+        </ng-container>
+      </button>
+      <button
+        type="button"
+        class="btn btn-primary btn-lg w-100 ms-0"
+        *ngIf="tab === 1"
+        (click)="unstake()"
+        [disabled]="!canUnstake()"
+      >
+        <ng-container *ngIf="!selectedPosition">
+          Select a Position
+        </ng-container>
+        <ng-container *ngIf="selectedPosition"> Unstake </ng-container>
+      </button> -->
+    </div>
+  </div>
+</div>

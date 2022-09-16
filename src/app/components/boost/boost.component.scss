@@ -1,0 +1,80 @@
+/*mat-header-row {
+  border: none;
+  border-radius: 0.75rem 0.75rem 0 0;
+  background-color: #2a2a2a;
+  margin: 0 0 10px 0;
+}
+
+mat-row {
+  border: none;
+  border-radius: 0.75rem;
+  background-color: #2a2a2a;
+  margin: 0 0 10px 0;
+  padding: 10px 0;
+  cursor: pointer;
+}
+
+mat-row.selected {
+  border-radius: 0.75rem 0.75rem 0 0;
+  background-color: #3a3a3a;
+}
+
+mat-row:hover {
+  background-color: #3a3a3a;
+}
+
+mat-row.expandedDetails {
+  border: none;
+  border-radius: 0 0 0.75rem 0.75rem;
+  background-color: #2a2a2a;
+  margin: 0;
+  padding: 0;
+  cursor: auto;
+}
+
+.no-data-row {
+  border: none;
+  border-radius: 0.75rem;
+  background-color: #2a2a2a;
+  margin: 0 0 10px 0;
+  padding: 10px 0;
+}
+
+.opp-input {
+  border: 1px solid transparent;
+  border-radius: 0.75rem;
+}
+
+.opp-input:focus {
+  border: 1px solid rgba(255, 22, 190, 1);
+}
+
+.opp-btn {
+  border-radius: 0.75rem;
+}
+
+.opp-nav {
+  background-color: #3a3a3a;
+}
+
+.opp-nav-item {
+  width: 15%;
+  height: 2.75rem;
+  cursor: pointer;
+}
+
+.opp-nav-selected {
+  color: rgba(255, 22, 190, 1);
+  background-color: rgba(255, 22, 190, 0.1);
+  border-bottom: 3px solid rgba(255, 22, 190, 1);
+}
+
+.list-group-item:not(:last-child)::after {
+  content: "";
+  border-bottom: 1px solid lightgray;
+  position: absolute;
+  transform: translateY(-50%);
+  top: 50%;
+  width: calc(100% - 0.5rem);
+}
+*/

@@ -1,0 +1,31 @@
+.claim-modal__modal {
+  border-radius: 1rem;
+  max-height: 35rem;
+}
+
+.claim-modal__content {
+  padding: 20px;
+}
+
+.claim-modal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: grey;
+}
+
+.claim-modal__header .btn-close {
+  color: grey;
+  cursor: pointer;
+}
+
+.claim-modal__body {
+}
+
+.claim-details {
+  margin-top: 1rem;
+  border: 1px double #3a3a3a;
+  border-radius: 1rem;
+  padding: 1rem;
+  color: grey;
+}

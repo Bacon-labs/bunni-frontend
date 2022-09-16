@@ -1,0 +1,94 @@
+<!-- Wallet Connect -->
+<div class="wallet-connect " *ngIf="!wallet.address">
+  <div class="wallet-connect__content">
+    <div class="wallet-connect__header">
+      <h3>
+        Select a wallet
+      </h3>
+      <h2
+        class="btn-close modal-close"
+        aria-label="Close"
+        (click)="activeModal.dismiss()"
+      ></h2>
+    </div>
+    <div class="wallet-connect__body">
+      <button
+        type="button"
+        name="provider-button"
+        class="wallet-connect__provider"
+        *ngFor="let provider of wallet.walletConnector.providers"
+        (click)="connectWallet(provider)"
+      >
+        {{ provider.name }}
+        <img [src]="provider.logo" alt="" />
+      </button>
+    </div>
+    <div class="wallet-connect__footer">
+      <small class="text-muted">
+        New to Ethereum?
+        <a href="https://ethereum.org/en/wallets/" target="_blank">
+          Learn more about wallets.
+        </a>
+      </small>
+    </div>
+  </div>
+</div>
+
+<!-- Wallet Details -->
+<div class="wallet-connect " *ngIf="wallet.address">
+  <div class="wallet-connect__content">
+    <div class="wallet-connect__header">
+      <h3>
+        Account
+      </h3>
+      <h2
+        class="btn-close modal-close"
+        aria-label="Close"
+        (click)="activeModal.dismiss()"
+      ></h2>
+    </div>
+    <div class="account-details">
+      <div class="account-details__header">
+        <p class="m-0">Connected with {{ wallet.providerName }}</p>
+        <button
+          type="button"
+          name="button-disconnect"
+          class="account-disconnect"
+          (click)="disconnectWallet()"
+        >
+          Disconnect
+        </button>
+      </div>
+      <div class="d-flex align-items-center justify-content-left gap-3">
+        <img
+          class=""
+          src="{{ constants.CHAIN_METADATA[wallet.chainId].iconPath }}"
+          width="35"
+          height="35"
+          alt="User Icon"
+        />
+        <h3 class="m-0">
+          <ng-container *ngIf="!ens">
+            {{ user.slice(0, 6) }}
+            ...
+            {{ user.slice(38, 42) }}
+          </ng-container>
+          <ng-container *ngIf="ens">
+            {{ ens }}
+          </ng-container>
+        </h3>
+      </div>
+      <small class="account-details__footer gap-3">
+        <a
+          class="text-decoration-none"
+          href="{{ explorerURL }}"
+          target="_blank"
+        >
+          <i class="fe fe-external-link"></i>
+          View on explorer
+        </a>
+        <p [cdkCopyToClipboard]="user">Copy Address</p>
+      </small>
+    </div>
+  </div>
+</div>

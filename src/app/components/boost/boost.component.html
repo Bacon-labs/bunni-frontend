@@ -1,0 +1,586 @@
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-12">
+      <div class="row align-items-center justify-content-between">
+        <div class="col">
+          <h1>Boosted yield opportunities</h1>
+        </div>
+      </div>
+      <div class="card bg-transparent shadow-none border-0">
+        <div class="card-body p-0">
+          <div class="table-responsive">
+            <!-- <table class="table table-sm mb-0">
+              <thead>
+                <tr>
+                  <th class="pb-0" scope="col">
+                    Asset
+                  </th>
+                  <th class="pb-0" scope="col">
+                    APY / Leverage
+                  </th>
+                  <th class="pb-0" scope="col"></th>
+                  <th class="pb-0" scope="col"></th>
+                </tr>
+              </thead>
+              <tbody class="list">
+                <tr class="table-row-inner-shadow">
+                  <td>
+                    <div class="d-flex align-items-center">
+                      <div class="avatar avatar-xs me-3">
+                        <img
+                          alt="..."
+                          class="avatar-img rounded-circle"
+                          src="./assets/img/chains/ethereum-icon.png"
+                        />
+                      </div>
+                      <div class="ml-3">
+                        <h4 class="fw-normal mb-1">TKN</h4>
+                        <small class="text-muted">TKN name</small>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <h4 class="fw-normal mb-1">0.00%</h4>
+                    <p class="fw-normal small mb-0 text-secondary">0.0 x</p>
+                  </td>
+                  <td
+                    class="d-flex align-items-center justify-content-end"
+                    colspan="2"
+                  >
+                    <button
+                      type="submit"
+                      class="btn btn-primary btn-sm me-3"
+                      data-bs-toggle="modal"
+                      data-bs-target="#ModalDeposit"
+                    >
+                      Deposit
+                    </button>
+                    <button
+                      type="submit"
+                      class="btn btn-dark btn-sm"
+                      data-bs-toggle="modal"
+                      data-bs-target="#"
+                    >
+                      Withdraw
+                    </button>
+                  </td>
+                </tr>
+                <tr class="table-row-inner-shadow">
+                  <td>
+                    <div class="d-flex align-items-center">
+                      <div class="avatar avatar-xs me-3">
+                        <img
+                          alt="..."
+                          class="avatar-img rounded-circle"
+                          src="./assets/img/chains/ethereum-icon.png"
+                        />
+                      </div>
+                      <div class="ml-3">
+                        <h4 class="fw-normal mb-1">TKN</h4>
+                        <small class="text-muted">TKN name</small>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <h4 class="fw-normal mb-1">0.00%</h4>
+                    <p class="fw-normal small mb-0 text-secondary">0.0 x</p>
+                  </td>
+                  <td
+                    class="d-flex align-items-center justify-content-end"
+                    colspan="2"
+                  >
+                    <button
+                      type="submit"
+                      class="btn btn-primary btn-sm me-3"
+                      data-bs-toggle="modal"
+                      data-bs-target="#ModalDeposit"
+                    >
+                      Deposit
+                    </button>
+                    <button
+                      type="submit"
+                      class="btn btn-dark btn-sm"
+                      data-bs-toggle="modal"
+                      data-bs-target="#"
+                    >
+                      Withdraw
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table> -->
+
+            <mat-table [dataSource]="data" multiTemplateDataRows matSort matSortActive="apy" matSortDirection="desc"
+              matSortDisableClear (matSortChange)="sort($event)">
+              <ng-container matColumnDef="asset">
+                <mat-header-cell mat-sort-header *matHeaderCellDef class="col-4">
+                  Asset
+                </mat-header-cell>
+                <mat-cell *matCellDef="let data" class="col-4">
+                  <div class="d-flex align-items-center">
+                    <div class="avatar avatar-sm">
+                      <img alt="..." class="avatar-img rounded-circle me-3" [src]="data.underlying.iconPath"
+                        onerror="this.src = 'assets/img/tokens/unknown.svg'" />
+                    </div>
+                    <div class="ms-3">
+                      <h4 class="fw-normal mb-1">
+                        {{ data.underlying.symbol }}
+
+                        <!-- {{ data.share.symbol }} -->
+                      </h4>
+                      <a class="fw-normal fs-5 small mb-0 text-secondary" href="{{
+                          constants.CHAIN_METADATA[wallet.chainId]
+                            .blockExplorerUrls[0]
+                        }}/address/{{ data.share.address }}" target="_blank">
+                        {{ data.share.name }}
+                        <i class="fe fe-external-link"></i>
+                      </a>
+                    </div>
+                  </div>
+                </mat-cell>
+                <mat-footer-cell *matFooterCellDef></mat-footer-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="apy">
+                <mat-header-cell mat-sort-header *matHeaderCellDef>
+                  Boosted APY
+                  <i class="fe fe-info ml-3"
+                    ngbTooltip="APY estimated using the 14-day average. May not be accurate for protocols with irregular yield accrual (e.g. Yearn)."></i>
+                </mat-header-cell>
+                <mat-cell *matCellDef="let data" class="">
+                  <ng-container *ngIf="data.isNewVault">
+                    <span class="badge bg-primary ms-2">New</span>
+                  </ng-container>
+                  <ng-container *ngIf="!data.isNewVault">
+                    {{ data.apy.times(data.leverage).times(100).toFormat(4) }}%
+                  </ng-container>
+                </mat-cell>
+                <mat-footer-cell *matFooterCellDef></mat-footer-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="leverage" class="">
+                <mat-header-cell mat-sort-header *matHeaderCellDef>
+                  Boost
+                </mat-header-cell>
+                <mat-cell *matCellDef="let data" class="">
+                  {{ data.leverage.toFormat(2) }}x
+                </mat-cell>
+                <mat-footer-cell *matFooterCellDef></mat-footer-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="xpytBalance" class="">
+                <mat-header-cell mat-sort-header *matHeaderCellDef>
+                  My Deposits
+                </mat-header-cell>
+                <mat-cell *matCellDef="let data" class="">
+                  {{ data.xpytBalance.toFormat(2) }} {{ data.xpyt.symbol }}
+                </mat-cell>
+                <mat-footer-cell *matFooterCellDef></mat-footer-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="actions">
+                <mat-header-cell *matHeaderCellDef></mat-header-cell>
+                <mat-cell *matCellDef="let data" class="justify-content-end" style="cursor: pointer;">
+                  <span class="fe text-white" [ngClass]="
+                      data.expandedDetails ? 'fe-chevron-up' : 'fe-chevron-down'
+                    "></span>
+                </mat-cell>
+                <mat-footer-cell *matFooterCellDef></mat-footer-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="expandedDetails">
+                <mat-header-cell *matHeaderCellDef></mat-header-cell>
+                <mat-cell *matCellDef="let data" class="d-flex flex-column align-items-start p-0">
+                  <!-- Nav -->
+                  <ul class="nav nav-tabs w-100 px-4 border-dark" id="myTab" role="tablist">
+                    <li class="nav-item" role="presentation" (click)="switchTab(data, 0)">
+                      <button class="nav-link" [ngClass]="{ active: data.tab === 0 }">
+                        Deposit
+                      </button>
+                    </li>
+                    <li class="nav-item" role="presentation" (click)="switchTab(data, 1)">
+                      <button class="nav-link" [ngClass]="{ active: data.tab === 1 }">
+                        Withdraw
+                      </button>
+                    </li>
+                    <li class="nav-item" role="presentation" (click)="switchTab(data, 2)">
+                      <button class="nav-link" [ngClass]="{ active: data.tab === 2 }">
+                        Info
+                      </button>
+                    </li>
+                  </ul>
+                  <div class="tab-content p-4" id="myTabContent">
+                    <div *ngIf="data.tab === 0" class="tab-pane fade" [ngClass]="{ 'show active': data.tab === 0 }"
+                      role="tabpanel" tabindex="0">
+                      <div class="row">
+                        <div class="col-12 col-lg-6">
+                          <p class="lead">
+                            Deposit your assets into Timeless to earn boosted
+                            yield. You will receive xPYT, which auto-compounds
+                            the yield you earn back into your position.
+                          </p>
+                          <small class="fst-italic text-secondary">
+                            Note: The value of your position will go up when the
+                            yield rate goes up and go down when the yield rate
+                            goes down. This is the risk of yield boosting. A fee
+                            of 10% is taken from the yield by Timeless, and
+                            additional fees on yield may be paid during xPYT's
+                            auto-compounding process.
+                          </small>
+                        </div>
+                        <div class="col-12 col-lg-6">
+                          <div class="card card-inner-shadow">
+                            <div class="card-body py-2">
+                              <div class="row align-items-top my-3">
+                                <div class="col">
+                                  <div class="row align-items-center">
+                                    <div class="col-auto">
+                                      <div class="avatar">
+                                        <img [src]="
+                                            data.useEther
+                                              ? token.ETHER.iconPath
+                                              : data.underlying.iconPath
+                                          " alt="{{
+                                            data.useEther
+                                              ? token.ETHER.symbol
+                                              : data.underlying.symbol
+                                          }} Icon" class="avatar-img rounded-circle"
+                                          onerror="this.src = 'assets/img/tokens/unknown.svg'" />
+                                      </div>
+                                    </div>
+                                    <div class="col-auto text-truncate ms-n2">
+                                      <h3 class="mb-1 name text-white text-truncate">
+                                        {{
+                                        data.useEther
+                                        ? "ETH"
+                                        : data.underlying.symbol
+                                        }}
+                                        <ng-container *ngIf="
+                                            data.underlying.address ===
+                                            constants.WETH[wallet.chainId]
+                                          ">
+                                          <span class="small ms-2 mb-0 text-primary" (click)="
+                                              data.useEther = !data.useEther
+                                            " style="cursor: pointer;">
+                                            use
+                                            {{ data.useEther ? "WETH" : "ETH" }}
+                                          </span>
+                                        </ng-container>
+                                      </h3>
+                                      <p class="small mb-0 text-secondary">
+                                        ${{ data.depositAmount.times(data.underlyingPriceUSD).toFormat(2) }}
+                                      </p>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="col text-end">
+                                  <h2 class="mb-1 name text-white text-truncate">
+                                    <label for="deposit-amount" class="form-label d-none">
+                                      Deposit amount
+                                    </label>
+                                    <input
+                                      class="form-control form-control-flush form-control-md input-sm text-end w-100"
+                                      type="text" name="deposit-amount" id="deposit-amount" aria-describedby="helpId"
+                                      [value]="data.depositAmount.toFixed()" (input)="
+                                        setDepositAmount(
+                                          data,
+                                          $event.target.value
+                                        )
+                                      " placeholder="0.00" autocomplete="off" />
+                                  </h2>
+                                  <p class="small mb-0 text-secondary">
+                                    Balance:
+                                    {{
+                                    data.useEther
+                                    ? userData.tokenBalances[
+                                    constants.ETH_ADDRESS
+                                    ]
+                                    .div(1e18)
+                                    .toFormat(4)
+                                    : data.underlyingBalance.toFormat(4)
+                                    }}
+                                    {{
+                                    data.useEther
+                                    ? "ETH"
+                                    : data.underlying.symbol
+                                    }}
+                                    <button class="btn btn-sm btn-link pt-0 px-0" (click)="
+                                        setDepositAmount(
+                                          data,
+                                          data.useEther
+                                            ? userData.tokenBalances[
+                                                constants.ETH_ADDRESS
+                                              ].div(1e18)
+                                            : data.underlyingBalance
+                                        )
+                                      ">
+                                      Max
+                                    </button>
+                                  </p>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+
+                          <div class="table-responsive" *ngIf="data.depositAmount.gt(0)">
+                            <table class="table">
+                              <tbody>
+                                <tr>
+                                  <td class="px-0 py-2 text-white border-0 small">
+                                    Minimum boost
+                                  </td>
+                                  <td class="px-0 py-2 text-white text-end border-0 small">
+                                    <h4 class="mb-1" *ngIf="!data.loading">
+                                      {{ data.received.div(data.depositAmount).toFormat(4) }}x
+                                    </h4>
+                                    <ng-container *ngIf="data.loading">
+                                      <div class="spinner-grow spinner-grow-sm text-white" role="status">
+                                        <span class="visually-hidden">
+                                          Loading...
+                                        </span>
+                                      </div>
+                                    </ng-container>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td class="px-0 py-2 text-white border-0 small">
+                                    Minimum boosted APY
+                                  </td>
+                                  <td class="px-0 py-2 text-white text-end border-0 small">
+                                    <h4 class="mb-1" *ngIf="!data.loading">
+                                      {{ data.apy.times(data.received).div(data.depositAmount).times(100).toFormat(4) }}%
+                                    </h4>
+                                    <ng-container *ngIf="data.loading">
+                                      <div class="spinner-grow spinner-grow-sm text-white" role="status">
+                                        <span class="visually-hidden">
+                                          Loading...
+                                        </span>
+                                      </div>
+                                    </ng-container>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td class="px-0 py-2 text-white border-0 small">
+                                    Minimum {{ data.xpyt.symbol }} received
+                                  </td>
+                                  <td class="px-0 py-2 text-white text-end border-0 small">
+                                    <h4 class="mb-1" *ngIf="!data.loading">
+                                      {{ data.received.toFormat(4) }}
+                                    </h4>
+                                    <ng-container *ngIf="data.loading">
+                                      <div class="spinner-grow spinner-grow-sm text-white" role="status">
+                                        <span class="visually-hidden">
+                                          Loading...
+                                        </span>
+                                      </div>
+                                    </ng-container>
+                                  </td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </div>
+                          <div class="row" *ngIf="wallet.userAddress">
+                            <div class="col-12 col-lg-6">
+                              <button type="button" name="button" class="btn btn-lg w-100"
+                                [disabled]="!canApprove(data)" [ngClass]="
+                                  !hasApproval(data)
+                                    ? 'btn-primary'
+                                    : 'btn-success'
+                                " (click)="approve(data)">
+                                <ng-container *ngIf="!hasApproval(data)">Approve</ng-container>
+                                <ng-container *ngIf="hasApproval(data)">Approved</ng-container>
+                              </button>
+                            </div>
+                            <div class="col-12 col-lg-6">
+                              <button type="button" name="button" class="btn btn-lg ms-2 w-100" [ngClass]="
+                                  !canDeposit(data) ? 'btn-dark' : 'btn-primary'
+                                " (click)="deposit(data)" [disabled]="!canDeposit(data) || data.loading">
+                                Deposit
+                              </button>
+                            </div>
+                          </div>
+                          <div class="row" *ngIf="!wallet.userAddress">
+                            <div class="col-12">
+                              <button type="button" name="button" class="btn btn-lg btn-primary ms-2 w-100"
+                                (click)="openWalletModal()">
+                                Connect a Wallet
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div *ngIf="data.tab === 1" class="tab-pane fade" [ngClass]="{ 'show active': data.tab === 1 }"
+                      role="tabpanel" tabindex="0">
+                      <div class="row">
+                        <div class="col-12 col-lg-6">
+                          <p class="lead">
+                            Withdraw assets from your position. You will swap
+                            xPYT back into the underlying asset.
+                          </p>
+                        </div>
+                        <div class="col-12 col-lg-6">
+                          <div class="card card-inner-shadow">
+                            <div class="card-body py-2">
+                              <div class="row align-items-top my-3">
+                                <div class="col">
+                                  <div class="row align-items-center">
+                                    <div class="col-auto">
+                                      <div class="avatar">
+                                        <img [src]="data.xpyt.iconPath" alt="{{ data.xpyt.symbol }} Icon"
+                                          class="avatar-img rounded-circle border-pyt"
+                                          onerror="this.src = 'assets/img/tokens/unknown.svg'" />
+                                      </div>
+                                    </div>
+                                    <div class="col-auto text-truncate ms-n2">
+                                      <h3 class="mb-1 name text-white text-truncate">
+                                        {{ data.xpyt.symbol }}
+                                      </h3>
+                                      <p class="small mb-0 text-secondary">
+                                        ${{ data.withdrawAmount.times(data.xpytPriceUSD).toFormat(2) }}
+                                      </p>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="col text-end">
+                                  <h2 class="mb-1 name text-white text-truncate">
+                                    <label for="withdraw-amount" class="form-label d-none">
+                                      Withdraw amount
+                                    </label>
+                                    <input
+                                      class="form-control form-control-flush form-control-md input-sm text-end w-100"
+                                      type="text" name="withdraw-amount" id="withdraw-amount" aria-describedby="helpId"
+                                      [value]="data.withdrawAmount.toFixed()" (input)="
+                                        setWithdrawAmount(
+                                          data,
+                                          $event.target.value
+                                        )
+                                      " placeholder="0.00" autocomplete="off" />
+                                  </h2>
+                                  <p class="small mb-0 text-secondary">
+                                    Balance: {{ data.xpytBalance.toFormat(4) }}
+                                    {{ data.xpyt.symbol }}
+                                    <button class="btn btn-sm btn-link pt-0 px-0" (click)="
+                                        setWithdrawAmount(
+                                          data,
+                                          data.xpytBalance
+                                        )
+                                      ">
+                                      Max
+                                    </button>
+                                  </p>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-12 text-end mb-2">
+                              Minimum {{ data.underlying.symbol }} received:
+                              <ng-container *ngIf="!data.loading">
+                                {{ data.received.toFormat(4) }}
+                              </ng-container>
+                              <ng-container *ngIf="data.loading">
+                                <div class="spinner-grow spinner-grow-sm text-white" role="status">
+                                  <span class="visually-hidden">
+                                    Loading...
+                                  </span>
+                                </div>
+                              </ng-container>
+                            </div>
+                          </div>
+                          <div class="row" *ngIf="wallet.userAddress">
+                            <div class="col-12 col-lg-6">
+                              <button type="button" name="button" class="btn btn-lg w-100"
+                                [disabled]="!canApprove(data)" [ngClass]="
+                                  !hasApproval(data)
+                                    ? 'btn-primary'
+                                    : 'btn-success'
+                                " (click)="approve(data)">
+                                <ng-container *ngIf="!hasApproval(data)">Approve</ng-container>
+                                <ng-container *ngIf="hasApproval(data)">Approved</ng-container>
+                              </button>
+                            </div>
+                            <div class="col-12 col-lg-6">
+                              <button type="button" name="button" class="btn btn-lg ms-2 w-100" [ngClass]="
+                                  !canWithdraw(data)
+                                    ? 'btn-dark'
+                                    : 'btn-primary'
+                                " (click)="withdraw(data)" [disabled]="!canWithdraw(data) || data.loading">
+                                Withdraw
+                              </button>
+                            </div>
+                          </div>
+                          <div class="row" *ngIf="!wallet.userAddress">
+                            <div class="col-12">
+                              <button type="button" name="button" class="btn btn-lg btn-primary ms-2 w-100"
+                                (click)="openWalletModal()">
+                                Connect a Wallet
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div *ngIf="data.tab === 2" class="tab-pane fade" [ngClass]="{ 'show active': data.tab === 2 }"
+                      role="tabpanel" tabindex="0">
+                      <div class="col-12">
+                        <div class="list-group">
+                          <a href="{{
+                              constants.CHAIN_METADATA[wallet.chainId]
+                                .blockExplorerUrls[0]
+                            }}/address/{{ data.xpyt.address }}" class="list-group-item list-group-item-action"
+                            target="_blank">
+                            xPYT address: {{ data.xpyt.address }}
+                          </a>
+                          <a href="{{
+                              constants.CHAIN_METADATA[wallet.chainId]
+                                .blockExplorerUrls[0]
+                            }}/address/{{ data.share.address }}" class="list-group-item list-group-item-action"
+                            target="_blank">Vault address: {{ data.share.address }}</a>
+                          <a href="{{
+                              constants.CHAIN_METADATA[wallet.chainId]
+                                .blockExplorerUrls[0]
+                            }}/address/{{ data.gate }}" class="list-group-item list-group-item-action" target="_blank">
+                            Deposit contract address: {{ data.gate }}
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </mat-cell>
+                <mat-footer-cell *matFooterCellDef></mat-footer-cell>
+              </ng-container>
+
+              <mat-header-row *matHeaderRowDef="[
+                  'asset',
+                  'apy',
+                  'leverage',
+                  'xpytBalance',
+                  'actions'
+                ]" class="mb-0 text-uppercase text-secondary h6 border-0">
+              </mat-header-row>
+
+              <mat-row *matRowDef="
+                  let data;
+                  columns: ['asset', 'apy', 'leverage', 'xpytBalance', 'actions']
+                " (click)="expandDetails(data)" [ngClass]="{ 'selected rounded-top': data.expandedDetails }"
+                [ngClass]="{ 'rounded mb-3': !data.expandedDetails }" class="table-row-inner-shadow border-0 py-3">
+              </mat-row>
+
+              <mat-row *matRowDef="let data; columns: ['expandedDetails']"
+                class="expandedDetails table-row-inner-shadow border-0 mb-3" [hidden]="!data.expandedDetails">
+              </mat-row>
+
+              <div *matNoDataRow class="no-data-row text-center table-row-inner-shadow py-3 rounded">
+                <div class="spinner-grow text-white" role="status">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+              </div>
+            </mat-table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

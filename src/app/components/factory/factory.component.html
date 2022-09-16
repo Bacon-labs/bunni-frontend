@@ -1,0 +1,414 @@
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-lg-8">
+            <div class="row align-items-center justify-content-between mb-3">
+                <div class="col">
+                    <h1 class="mb-0">Create NYT, PYT, xPYT & trading pool</h1>
+                </div>
+                <div class="col-auto">
+                    <a href="https://docs.timelessfi.com/docs/guides/factory" target="_blank"
+                        class="btn btn-outline-dark text-white btn-sm align-items-center d-flex">Help</a>
+                </div>
+            </div>
+            <!-- Vault address input -->
+            <div class="card card-inner-shadow">
+                <!-- Nav -->
+                <ul class="nav nav-tabs w-100 px-4 border-dark" id="myTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="tokenFactory-tab" data-bs-toggle="tab"
+                            data-bs-target="#tokenFactory" type="button" role="tab" aria-controls="tokenFactory"
+                            aria-selected="true">
+                            PYT & NYT Factory
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="xpytFactory-tab" data-bs-toggle="tab"
+                            data-bs-target="#xpytFactory" type="button" role="tab" aria-controls="xpytFactory"
+                            aria-selected="true">
+                            xPYT & Uniswap Pool Factory
+                        </button>
+                    </li>
+                </ul>
+                <div class="card-body py-0">
+                    <div class="tab-content py-4" id="myTabContent">
+                        <div class="tab-pane fade show active" id="tokenFactory" role="tabpanel" aria-labelledby="tokenFactory-tab">
+                            <label class="h5 mb-0 text-uppercase text-secondary">Yield-bearing Vault Address</label>
+
+                            <input
+                              type="text"
+                              class="form-control mb-4 card card-inner-shadow"
+                              placeholder="0x... (Supports ERC-4626 and Yearn v2 vaults)"
+                              [value]="vault_address"
+                              (input)="set_vault_address($event.target.value)"
+                              >
+
+                            <div class="d-flex align-items-center justify-content-between">
+                              <h4 class="alert-heading text-success" *ngIf="valid_vault_address && nyt_deployment">
+                                <i class="fe fe-check-circle me-1"></i>
+                                NYT has been deployed for this vault: {{ nyt_deployment.slice(0, 6) }}...{{ nyt_deployment.slice(38, 42) }}
+                              </h4>
+                              <h4 class="alert-heading text-warning" *ngIf="valid_vault_address && !nyt_deployment">
+                                <i class="fe fe-alert-circle me-1"></i>
+                                NYT has not been deployed for this vault.
+                              </h4>
+                              <div class="col-auto" *ngIf="nyt_deployment">
+                                <a
+                                  class="me-3"
+                                  href="{{ constants.CHAIN_METADATA[wallet.chainId].blockExplorerUrls[0]}}/address/{{ nyt_deployment }}"
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                >
+                                      <i class="fe fe-external-link"></i>
+                                  </a>
+                                  <i class="fe fe-copy text-primary clickable" [cdkCopyToClipboard]="nyt_deployment"></i>
+                              </div>
+                            </div>
+
+                            <div class="d-flex align-items-center justify-content-between">
+                              <h4 class="alert-heading text-success mb-4" *ngIf="valid_vault_address && pyt_deployment">
+                                <i class="fe fe-check-circle me-1"></i>
+                                PYT has been deployed for this vault: {{ pyt_deployment.slice(0, 6) }}...{{ pyt_deployment.slice(38, 42) }}
+                              </h4>
+                              <h4 class="alert-heading text-warning mb-4" *ngIf="valid_vault_address && !pyt_deployment">
+                                <i class="fe fe-alert-circle me-1"></i>
+                                PYT has not been deployed for this vault.
+                              </h4>
+                              <div class="col-auto" *ngIf="pyt_deployment">
+                                <a
+                                  class="me-3"
+                                  href="{{ constants.CHAIN_METADATA[wallet.chainId].blockExplorerUrls[0]}}/address/{{ pyt_deployment }}"
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                >
+                                      <i class="fe fe-external-link"></i>
+                                  </a>
+                                  <i class="fe fe-copy text-primary clickable" [cdkCopyToClipboard]="pyt_deployment"></i>
+                              </div>
+                            </div>
+
+                            <!-- ACTIONS -->
+                            <div class="nav row align-items-center">
+                                <button
+                                  class="btn btn-primary btn-lg w-100"
+                                  [disabled]="!can_deploy_token()"
+                                  (click)="deploy_pyt_nyt()"
+                                >
+                                  {{ token_factory_message() }}
+                                </button>
+                            </div>
+                            <!-- END ACTIONS -->
+                        </div>
+                        <div class="tab-pane fade show" id="xpytFactory" role="tabpanel" aria-labelledby="xpytFactory-tab">
+                          <label class="h5 mb-0 text-uppercase text-secondary">Yield-bearing Vault Address</label>
+
+                          <input
+                            type="text"
+                            class="form-control mb-4 card card-inner-shadow"
+                            placeholder="0x... (Supports ERC-4626 and Yearn v2 vaults)"
+                            [value]="vault_address"
+                            (input)="set_vault_address($event.target.value)"
+                          >
+
+                          <label class="h5 mb-2 text-uppercase text-secondary">
+                            Starting xPYT Price
+                            <i class="fe fe-info align-bottom" tooltipClass="ms-2" placement="right" ngbTooltip="The starting price of xPYT in the Uniswap pool in terms of the underlying asset (e.g. ETH). For example, a value of 0.5 means 1 xPYT = 0.5 underlying asset. Should be between 0.5 and 0.9."></i>
+                          </label>
+                          <div class="mb-4">
+                            <div class="mb-1 d-flex align-items-center justify-content-between">
+                              <input
+                                type="text"
+                                class="form-control card card-inner-shadow mb-0 border border-dark"
+                                [value]="initial_price.toFixed()"
+                                (input)="set_initial_price($event.target.value)"
+                                placeholder="0.6"
+                              >
+                            </div>
+                            <small class="text-danger" *ngIf="initial_price.gt(0.9) || initial_price.lt(0.5)">
+                              Caution: The value should be between 0.5 and 0.9.
+                            </small>
+                          </div>
+
+                          <div class="d-flex align-items-center justify-content-between">
+                            <h4 class="alert-heading text-success" *ngIf="valid_vault_address && xpyt_deployment">
+                              <i class="fe fe-check-circle me-1"></i>
+                              xPYT has been deployed for this vault: {{ xpyt_deployment.slice(0, 6) }}...{{ xpyt_deployment.slice(38, 42) }}
+                            </h4>
+                            <h4 class="alert-heading text-warning" *ngIf="valid_vault_address && !xpyt_deployment">
+                              <i class="fe fe-alert-circle me-1"></i>
+                              xPYT has not been deployed for this vault.
+                            </h4>
+                            <div class="col-auto" *ngIf="xpyt_deployment">
+                              <a
+                                class="me-3"
+                                href="{{ constants.CHAIN_METADATA[wallet.chainId].blockExplorerUrls[0]}}/address/{{ xpyt_deployment }}"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
+                                    <i class="fe fe-external-link"></i>
+                                </a>
+                                <i class="fe fe-copy text-primary clickable" [cdkCopyToClipboard]="xpyt_deployment"></i>
+                            </div>
+                          </div>
+
+                          <div class="d-flex align-items-center justify-content-between">
+                            <h4 class="alert-heading text-success" *ngIf="valid_vault_address && pool_deployment">
+                              <i class="fe fe-check-circle me-1"></i>
+                              Uniswap pool has been deployed for this vault: {{ pool_deployment.slice(0, 6) }}...{{ pool_deployment.slice(38, 42) }}
+                            </h4>
+                            <h4 class="alert-heading text-warning" *ngIf="valid_vault_address && !pool_deployment">
+                              <i class="fe fe-alert-circle me-1"></i>
+                              Uniswap pool has not been deployed for this vault.
+                            </h4>
+                            <div class="col-auto" *ngIf="pool_deployment">
+                              <a
+                                class="me-3"
+                                href="{{ constants.CHAIN_METADATA[wallet.chainId].blockExplorerUrls[0]}}/address/{{ pool_deployment }}"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
+                                    <i class="fe fe-external-link"></i>
+                                </a>
+                                <i class="fe fe-copy text-primary clickable" [cdkCopyToClipboard]="pool_deployment"></i>
+                            </div>
+                          </div>
+
+                          <!-- pool advanced parameter -->
+                          <a class="btn w-100 px-0 text-start text-primary mb-3" data-bs-toggle="collapse"
+                              href="#xpyt-collapse" role="button" aria-expanded="false"
+                              aria-controls="xpyt-collapse">
+                              <div class="row justify-content-between">
+                                  <div class="col">
+                                      Advanced xPYT Parameters
+                                  </div>
+                                  <div class="col-auto mr-auto">
+                                      <i class="fe fe-chevron-up text-secondary"></i>
+                                      <i class="fe fe-chevron-down text-secondary"></i>
+                                  </div>
+                              </div>
+                          </a>
+                          <div class="collapse" id="xpyt-collapse">
+
+                              <label class="h5 mb-2 text-uppercase text-secondary">
+                                Uniswap Pool Fee
+                                <i class="fe fe-info align-bottom" tooltipClass="ms-2" placement="right" ngbTooltip="The fee used by the Uniswap V3 pool for swapping."></i>
+                              </label>
+                              <div class="mb-3 d-flex justify-content-between">
+                                <button type="button" class="col me-1 btn btn-sm btn-dark" [ngClass]="{'btn-primary': uniswap_v3_pool_fee.eq(100)}" (click)="set_uniswap_v3_pool_fee(100)" *ngIf="wallet.chainId === constants.CHAIN_ID.ETHEREUM">
+                                  0.01%
+                                </button>
+                                <button type="button" class="col me-1 btn btn-sm btn-dark" [ngClass]="{'btn-primary': uniswap_v3_pool_fee.eq(500)}" (click)="set_uniswap_v3_pool_fee(500)">
+                                  0.05%
+                                </button>
+                                <button type="button" class="col me-1 btn btn-sm btn-dark" [ngClass]="{'btn-primary': uniswap_v3_pool_fee.eq(3000)}" (click)="set_uniswap_v3_pool_fee(3000)">
+                                  0.3%
+                                </button>
+                                <button type="button" class="col me-0 btn btn-sm btn-dark" [ngClass]="{'btn-primary': uniswap_v3_pool_fee.eq(10000)}" (click)="set_uniswap_v3_pool_fee(10000)">
+                                  1%
+                                </button>
+                              </div>
+
+                              <label class="h5 mb-2 text-uppercase text-secondary">
+                                Uniswap TWAP Seconds Ago
+                                <i class="fe fe-info align-bottom" tooltipClass="ms-2" placement="right" ngbTooltip="The number of seconds in the past from which to take the TWAP of the Uniswap V3 pool."></i>
+                              </label>
+                              <div class="input-group mb-4">
+                                <input
+                                  type="text"
+                                  class="form-control card card-inner-shadow mb-0 border border-dark"
+                                  [value]="uniswap_v3_twap_seconds_ago"
+                                  (input)="set_uniswap_v3_twap_seconds_ago($event.target.value)"
+                                  placeholder="1800"
+                                >
+                                <button type="button" class="btn btn-outline-dark text-white" (click)="set_uniswap_v3_twap_seconds_ago(1800)">
+                                  Use Default
+                                </button>
+                              </div>
+
+                              <label class="h5 mb-2 text-uppercase text-secondary">
+                                Pounder Reward Multiplier
+                                <i class="fe fe-info align-bottom" tooltipClass="ms-2" placement="right" ngbTooltip="The percentage of the yield claimed in pound() to give to the caller as reward."></i>
+                              </label>
+                              <div class="input-group mb-4">
+                                <input
+                                  type="text"
+                                  class="form-control card card-inner-shadow mb-0 border border-dark"
+                                  [value]="pounder_reward_multiplier.toFixed()"
+                                  (input)="set_pounder_reward_multiplier($event.target.value)"
+                                  placeholder="5"
+                                >
+                                <span class="input-group-text text-white border-dark bg-transparent">%</span>
+                                <button type="button" class="btn btn-outline-dark text-white" (click)="set_pounder_reward_multiplier(5)">
+                                  Use Default
+                                </button>
+                              </div>
+
+                              <label class="h5 mb-2 text-uppercase text-secondary">
+                                Minimum Output Multiplier
+                                <i class="fe fe-info align-bottom" tooltipClass="ms-2" placement="right" ngbTooltip="The minimum acceptable ratio between the NYT output in pound() and the expected NYT output based on the TWAP."></i>
+                              </label>
+                              <div class="input-group mb-4">
+                                <input
+                                  type="text"
+                                  class="form-control card card-inner-shadow mb-0 border border-dark"
+                                  [value]="minimum_output_multiplier.toFixed()"
+                                  (input)="set_minimum_output_multiplier($event.target.value)"
+                                  placeholder="95"
+                                >
+                                <span class="input-group-text text-white border-dark bg-transparent">%</span>
+                                <button type="button" class="btn btn-outline-dark text-white" (click)="set_minimum_output_multiplier(95)">
+                                  Use Default
+                                </button>
+                              </div>
+
+                              <label class="h5 mb-2 text-uppercase text-secondary">
+                                Observation Cardinality Next
+                                <i class="fe fe-info align-bottom" tooltipClass="ms-2" placement="right" ngbTooltip="The maximum lookback period of the TWAP oracle. Set to 0 to not update the cardinality."></i>
+                              </label>
+                              <div class="input-group mb-4">
+                                <input
+                                  type="text"
+                                  class="form-control card card-inner-shadow mb-0 border border-dark"
+                                  [value]="observation_cardinality_next"
+                                  (input)="set_observation_cardinality_next($event.target.value)"
+                                  placeholder="95"
+                                >
+                                <button type="button" class="btn btn-outline-dark text-white" (click)="set_observation_cardinality_next(200)">
+                                  Use Default
+                                </button>
+                              </div>
+
+                          </div>
+
+
+                          <!-- ACTIONS -->
+                          <button class="btn btn-primary btn-lg w-100" [disabled]="!can_deploy_xpyt()" (click)="deploy_xpyt()">
+                            {{ xpyt_factory_message() }}
+                          </button>
+                          <!-- END ACTIONS -->
+                        </div>
+                        <div class="tab-pane fade show" id="poolFactory" role="tabpanel" aria-labelledby="poolFactory-tab">
+
+                            <label class="h5 mb-0 text-uppercase text-secondary">Input Vault Address</label>
+
+                            <input
+                              type="text"
+                              class="form-control mb-4 card card-inner-shadow"
+                              placeholder="0x..."
+                              [value]="vault_address"
+                              (input)="set_vault_address($event.target.value)"
+                            >
+
+                            <div *ngIf="selected_vault && selected_vault.xpyt.length > 1">
+                              <label class="h5 mb-0 text-uppercase text-secondary">Select xPYT</label>
+                              <select class="mb-4 form-select" (change)="select_xpyt_deployment($event.target.value)">
+                                <option
+                                  value="{{ xpyt.address }}"
+                                  *ngFor="let xpyt of selected_vault.xpyt"
+                                  [selected]="xpyt.address === selected_xpyt.address"
+                                >
+                                  {{ xpyt.address }}
+                                </option>
+                              </select>
+                            </div>
+
+                            <div class="d-flex align-items-center justify-content-between">
+                              <h4 class="alert-heading text-success" *ngIf="valid_vault_address && pool_deployment">
+                                <i class="fe fe-check-circle me-1"></i>
+                                Pool has been deployed for this vault: {{ pool_deployment.slice(0, 6) }}...{{ pool_deployment.slice(38, 42) }}
+                              </h4>
+                              <h4 class="alert-heading text-warning" *ngIf="valid_vault_address && !pool_deployment">
+                                <i class="fe fe-alert-circle me-1"></i>
+                                Pool has not been deployed for this vault.
+                              </h4>
+                              <div class="col-auto" *ngIf="pool_deployment">
+                                <a
+                                  class="me-3"
+                                  href="{{ constants.CHAIN_METADATA[wallet.chainId].blockExplorerUrls[0]}}/address/{{ pool_deployment }}"
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                >
+                                      <i class="fe fe-external-link"></i>
+                                  </a>
+                                  <i class="fe fe-copy text-primary clickable" [cdkCopyToClipboard]="pool_deployment"></i>
+                              </div>
+                            </div>
+
+                            <!-- POOL FACTORY ADVANCED PARAMETERS -->
+                            <a class="btn w-100 px-0 text-start text-primary mb-3" data-bs-toggle="collapse"
+                                href="#collapseExample" role="button" aria-expanded="false"
+                                aria-controls="collapseExample">
+                                <div class="row justify-content-between">
+                                    <div class="col">
+                                        Advanced Pool Parameters
+                                    </div>
+                                    <div class="col-auto mr-auto">
+                                        <i class="fe fe-chevron-up text-secondary"></i>
+                                        <i class="fe fe-chevron-down text-secondary"></i>
+                                    </div>
+                                </div>
+                            </a>
+
+                            <div class="collapse" id="collapseExample">
+
+                                <label class="h5 mb-2 text-uppercase text-secondary">
+                                  Uniswap Pool Fee
+                                  <i class="fe fe-info align-bottom" tooltipClass="ms-2" placement="right" ngbTooltip="The fee used by the Uniswap V3 pool for swapping."></i>
+                                </label>
+                                <div class="mb-3 d-flex justify-content-between">
+                                  <button type="button" class="col me-1 btn btn-sm btn-dark" [ngClass]="{'btn-primary': fee.eq(100)}" (click)="set_fee(100)" *ngIf="wallet.chainId === constants.CHAIN_ID.ETHEREUM">
+                                    0.01%
+                                  </button>
+                                  <button type="button" class="col me-1 btn btn-sm btn-dark" [ngClass]="{'btn-primary': fee.eq(500)}" (click)="set_fee(500)">
+                                    0.05%
+                                  </button>
+                                  <button type="button" class="col me-1 btn btn-sm btn-dark" [ngClass]="{'btn-primary': fee.eq(3000)}" (click)="set_fee(3000)">
+                                    0.3%
+                                  </button>
+                                  <button type="button" class="col me-0 w-100 btn btn-sm btn-dark" [ngClass]="{'btn-primary': fee.eq(10000)}" (click)="set_fee(10000)">
+                                    1%
+                                  </button>
+                                </div>
+
+                                <label class="h5 mb-2 text-uppercase text-secondary">
+                                  Starting Price
+                                  <i class="fe fe-info align-bottom" tooltipClass="ms-2" placement="right" ngbTooltip="The starting price of the Uniswap pool. A value of 2 means 2 NYT = 1 xPYT."></i>
+                                </label>
+                                <div class="mb-4">
+                                  <div class="mb-1 d-flex align-items-center justify-content-between">
+                                    <input
+                                      type="text"
+                                      class="form-control card card-inner-shadow mb-0 border border-dark"
+                                      [value]="price.toFixed()"
+                                      (input)="set_price($event.target.value)"
+                                      placeholder="2"
+                                    >
+                                    <button type="button" class="btn btn-primary" (click)="set_price(2)">
+                                      Use Default
+                                    </button>
+                                  </div>
+                                  <small class="text-danger" *ngIf="price.gt(9) || price.lt(1)">
+                                    Caution: An initial price between 1 and 9 NYT per xPYT is recommended.
+                                  </small>
+                                </div>
+
+                            </div>
+                            <!-- END POOL FACTORY ADVANCED PARAMETERS -->
+
+                            <!-- POOL FACTORY ACTIONS -->
+                            <div class="nav row align-items-center">
+                                <button
+                                  class="btn btn-primary btn-lg w-100"
+                                  [disabled]="!can_deploy_pool()"
+                                  (click)="deploy_uniswap_pool()"
+                                >
+                                  {{ pool_factory_message() }}
+                                </button>
+                            </div>
+                            <!-- END POOL FACTORY ACTIONS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

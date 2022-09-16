@@ -1,0 +1,364 @@
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-12">
+      <!-- START XPYT -->
+      <div class="row align-items-center justify-content-between mb-2">
+        <div class="col">
+          <h1>Compounded Perpetual Yield Token (xPYT)</h1>
+        </div>
+      </div>
+      <div class="card card-inner-shadow mb-4">
+        <div class="card-body p-0">
+          <div class="row justify-content-center" *ngIf="loading">
+            <div class="col-auto my-4">
+              <div class="spinner-grow text-white" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table
+              mat-table
+              [dataSource]="xpytPositions"
+              class="table table-sm table-nowrap mb-0"
+              *ngIf="!loading"
+            >
+              <ng-container matColumnDef="token">
+                <th mat-header-cell *matHeaderCellDef>Asset</th>
+                <td mat-cell *matCellDef="let position" class="col-4">
+                  <div class="d-flex align-items-center my-3">
+                    <div class="avatar avatar-xs">
+                      <img
+                        alt="{{ position.token.symbol }} Icon"
+                        class="avatar-img rounded-circle me-3 border-pyt"
+                        [src]="position.token.iconPath"
+                        onerror="this.src = 'assets/img/tokens/unknown.svg'"
+                      />
+                    </div>
+
+                    <div class="ms-3">
+                      <h4 class="fw-normal mb-1">
+                        {{ position.token.symbol }}
+                      </h4>
+                      <p class="small mb-0 text-secondary">
+                        {{ position.token.name }}
+                      </p>
+                    </div>
+                  </div>
+                </td>
+                <td mat-footer-cell *matFooterCellDef></td>
+              </ng-container>
+
+              <ng-container matColumnDef="balance">
+                <th mat-header-cell *matHeaderCellDef>Your Balance</th>
+                <td mat-cell *matCellDef="let position" class="col-2">
+                  <div class="my-3">
+                    {{
+                      position.balance.div(position.token.precision).toFormat(4)
+                    }}
+                  </div>
+                </td>
+                <td mat-footer-cell *matFooterCellDef></td>
+              </ng-container>
+
+              <ng-container matColumnDef="price">
+                <th mat-header-cell *matHeaderCellDef>Price</th>
+                <td mat-cell *matCellDef="let position" class="col-1">
+                  <p class="fw-normal my-3">
+                    ${{ position.price.toFormat(2) }}
+                  </p>
+                </td>
+                <td mat-footer-cell *matFooterCellDef></td>
+              </ng-container>
+
+              <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let position" class="text-end">
+                  <!-- <button type="button" class="btn btn-sm border-primary">
+                    Swap
+                  </button> -->
+                </td>
+                <td mat-footer-cell *matFooterCellDef></td>
+              </ng-container>
+
+              <tr
+                mat-header-row
+                *matHeaderRowDef="['token', 'balance', 'price', 'actions']"
+              ></tr>
+              <tr
+                mat-row
+                *matRowDef="
+                  let position;
+                  columns: ['token', 'balance', 'price', 'actions']
+                "
+                class="mat-table-row"
+              ></tr>
+              <tr class="mat-row" *matNoDataRow>
+                <td class="mat-cell text-center text-secondary p-4" colspan="4">
+                  <span
+                    _ngcontent-fip-c39=""
+                    class="fe fe-inbox display-3 mb-2 d-flex justify-content-center"
+                  ></span>
+                  Your active positions will appear here.
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+      <!-- END XPYT -->
+
+      <!-- START PYT -->
+      <div class="row align-items-center justify-content-between mb-2">
+        <div class="col">
+          <h1>Perpetual Yield Token (PYT)</h1>
+        </div>
+      </div>
+      <div class="card card-inner-shadow mb-4">
+        <div class="card-body p-0">
+          <div class="row justify-content-center" *ngIf="loading">
+            <div class="col-auto my-4">
+              <div class="spinner-grow text-white" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table
+              mat-table
+              [dataSource]="pytPositions"
+              class="table table-sm table-nowrap mb-0"
+              *ngIf="!loading"
+            >
+              <ng-container matColumnDef="token">
+                <th mat-header-cell *matHeaderCellDef>Asset</th>
+                <td mat-cell *matCellDef="let position" class="col-4">
+                  <div class="d-flex align-items-center my-3">
+                    <div class="avatar avatar-xs">
+                      <img
+                        alt="{{ position.token.symbol }} Icon"
+                        class="avatar-img rounded-circle me-3 border-pyt"
+                        [src]="position.token.iconPath"
+                        onerror="this.src = 'assets/img/tokens/unknown.svg'"
+                      />
+                    </div>
+
+                    <div class="ms-3">
+                      <h4 class="fw-normal mb-1">
+                        {{ position.token.symbol }}
+                      </h4>
+                      <p class="small mb-0 text-secondary">
+                        {{ position.token.name }}
+                      </p>
+                    </div>
+                  </div>
+                </td>
+                <td mat-footer-cell *matFooterCellDef></td>
+              </ng-container>
+
+              <ng-container matColumnDef="balance">
+                <th mat-header-cell *matHeaderCellDef>Your Balance</th>
+                <td mat-cell *matCellDef="let position" class="col-2">
+                  <div class="my-3">
+                    {{
+                      position.balance.div(position.token.precision).toFormat(4)
+                    }}
+                  </div>
+                </td>
+                <td mat-footer-cell *matFooterCellDef></td>
+              </ng-container>
+
+              <ng-container matColumnDef="earnings">
+                <th mat-header-cell *matHeaderCellDef>Your Earnings</th>
+                <td mat-cell *matCellDef="let position" class="col-2">
+                  <p class="fw-normal my-3">
+                    {{ position.earnings.toFormat(4) }}
+                    {{ position.vault.underlying.symbol }}
+                  </p>
+                </td>
+                <td mat-footer-cell *matFooterCellDef></td>
+              </ng-container>
+
+              <ng-container matColumnDef="price">
+                <th mat-header-cell *matHeaderCellDef>Price</th>
+                <td mat-cell *matCellDef="let position" class="col-1">
+                  <p class="fw-normal my-3">
+                    ${{ position.price.toFormat(2) }}
+                  </p>
+                </td>
+                <td mat-footer-cell *matFooterCellDef></td>
+              </ng-container>
+
+              <ng-container matColumnDef="apy">
+                <th mat-header-cell *matHeaderCellDef>APY</th>
+                <td mat-cell *matCellDef="let position" class="col-1">
+                  <p class="fw-normal my-3">{{ position.apy.toFormat(2) }}%</p>
+                </td>
+                <td mat-footer-cell *matFooterCellDef></td>
+              </ng-container>
+
+              <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let position" class="text-end">
+                  <button
+                    type="button"
+                    class="btn btn-sm border-primary"
+                    (click)="openClaimModal(position)"
+                    [disabled]="position.earnings.lte(0)"
+                  >
+                    Claim earnings
+                  </button>
+                </td>
+                <td mat-footer-cell *matFooterCellDef></td>
+              </ng-container>
+
+              <tr
+                mat-header-row
+                *matHeaderRowDef="[
+                  'token',
+                  'balance',
+                  'earnings',
+                  'price',
+                  'apy',
+                  'actions'
+                ]"
+              ></tr>
+              <tr
+                mat-row
+                *matRowDef="
+                  let position;
+                  columns: [
+                    'token',
+                    'balance',
+                    'earnings',
+                    'price',
+                    'apy',
+                    'actions'
+                  ]
+                "
+                class="mat-table-row"
+              ></tr>
+              <tr class="mat-row" *matNoDataRow>
+                <td class="mat-cell text-center text-secondary p-4" colspan="6">
+                  <span
+                    _ngcontent-fip-c39=""
+                    class="fe fe-inbox display-3 mb-2 d-flex justify-content-center"
+                  ></span>
+                  Your active positions will appear here.
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+      <!-- END PYT -->
+
+      <!-- START NYT -->
+      <div class="row align-items-center justify-content-between mb-2">
+        <div class="col">
+          <h1>Negative Yield Token (NYT)</h1>
+        </div>
+      </div>
+      <div class="card card-inner-shadow mb-4">
+        <div class="card-body p-0">
+          <div class="row justify-content-center" *ngIf="loading">
+            <div class="col-auto my-4">
+              <div class="spinner-grow text-white" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table
+              mat-table
+              [dataSource]="nytPositions"
+              class="table table-sm table-nowrap mb-0"
+              *ngIf="!loading"
+            >
+              <ng-container matColumnDef="token">
+                <th mat-header-cell *matHeaderCellDef>Asset</th>
+                <td mat-cell *matCellDef="let position" class="col-4">
+                  <div class="d-flex align-items-center my-3">
+                    <div class="avatar avatar-xs">
+                      <img
+                        alt="{{ position.token.symbol }} Icon"
+                        class="avatar-img rounded-circle me-3 border-nyt"
+                        [src]="position.token.iconPath"
+                        onerror="this.src = 'assets/img/tokens/unknown.svg'"
+                      />
+                    </div>
+
+                    <div class="ms-3">
+                      <h4 class="fw-normal mb-1">
+                        {{ position.token.symbol }}
+                      </h4>
+                      <p class="small mb-0 text-secondary">
+                        {{ position.token.name }}
+                      </p>
+                    </div>
+                  </div>
+                </td>
+                <td mat-footer-cell *matFooterCellDef></td>
+              </ng-container>
+
+              <ng-container matColumnDef="balance">
+                <th mat-header-cell *matHeaderCellDef>Your Balance</th>
+                <td mat-cell *matCellDef="let position" class="col-2">
+                  <div class="my-3">
+                    {{
+                      position.balance.div(position.token.precision).toFormat(4)
+                    }}
+                  </div>
+                </td>
+                <td mat-footer-cell *matFooterCellDef></td>
+              </ng-container>
+
+              <ng-container matColumnDef="price">
+                <th mat-header-cell *matHeaderCellDef>Price</th>
+                <td mat-cell *matCellDef="let position" class="col-1">
+                  <p class="fw-normal my-3">
+                    ${{ position.price.toFormat(2) }}
+                  </p>
+                </td>
+                <td mat-footer-cell *matFooterCellDef></td>
+              </ng-container>
+
+              <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let position" class="text-end">
+                  <!-- <button type="button" class="btn btn-sm border-primary">
+                    Swap
+                  </button> -->
+                </td>
+                <td mat-footer-cell *matFooterCellDef></td>
+              </ng-container>
+
+              <tr
+                mat-header-row
+                *matHeaderRowDef="['token', 'balance', 'price', 'actions']"
+              ></tr>
+              <tr
+                mat-row
+                *matRowDef="
+                  let position;
+                  columns: ['token', 'balance', 'price', 'actions']
+                "
+                class="mat-table-row"
+              ></tr>
+              <tr class="mat-row" *matNoDataRow>
+                <td class="mat-cell text-center text-secondary p-4" colspan="4">
+                  <span
+                    _ngcontent-fip-c39=""
+                    class="fe fe-inbox display-3 mb-2 d-flex justify-content-center"
+                  ></span>
+                  Your active positions will appear here.
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+      <!-- END NYT -->
+    </div>
+  </div>
+</div>

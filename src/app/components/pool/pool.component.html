@@ -1,0 +1,199 @@
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-12 col-lg-10">
+      <div class="row align-items-center justify-content-between">
+        <div class="col">
+          <h2 class="mb-0">Pools</h2>
+        </div>
+        <div class="col-auto">
+          <button type="button" class="btn btn-sm btn-primary" routerLink="/add">
+            New position
+          </button>
+        </div>
+      </div>
+      <!--No active positions-->
+      <div class="card card-inner-shadow">
+        <div class="card-body">
+          <span class="fe fe-inbox display-3 mb-2 d-flex justify-content-center"></span>
+          <h4 class="text-center">Your active positions will appear here.</h4>
+        </div>
+      </div>
+      <!--End no active positions-->
+
+      <!--Pool positions listing-->
+      <div class="card card-inner-shadow">
+        <div class="card-body">
+          <!--pool position 1-->
+          <a class="card border border-light text-white mb-3" data-bs-toggle="collapse" href="#collapseMyPoolPositions" role="button"
+            aria-expanded="false" aria-controls="collapseMyPoolPositions">
+            <div class="card-body py-3">
+              <div class="row align-items-center">
+                <div class="col-12 col-lg-8 text-start">
+                  <h4 class="mb-1 text-truncate">pool.token.symbol / pool.token.symbol</h4>
+                  <small class="text-secondary">
+                    Min price: x TKN per TKN / Max price: x TKN per TKN
+                  </small>
+                </div>
+                <div class="col-auto me-auto">
+                  <h4 class="mb-1 text-truncate">0.0000</h4>
+                  <small class="text-secondary">$0.00</small>
+                </div>
+                <div class="col-auto mr-auto">
+                  <span class="badge bg-success-soft">In Range</span>
+                  <span class="badge bg-danger-soft d-none">Out of Range</span>
+                </div>
+                <div class="col-auto ">
+                  <i class="fe fe-chevron-up text-secondary"></i>
+                  <i class="fe fe-chevron-down text-secondary"></i>
+                </div>
+              </div>
+            </div>
+          </a>
+          <div class="collapse" id="collapseMyPoolPositions">
+            <div class="row">
+              <div class="col">
+                <!-- Pool token Input -->
+                <div class="card card-inner-shadow mb-0">
+                  <div class="card-header">
+                    <h2 class="h5 mb-0 text-uppercase text-secondary">Amount</h2>
+                  </div>
+                  <div class="card-body pt-0 pb-3">
+                    <div class="input-group mb-0">
+                      <input type="text"
+                        class="form-control form-control-flush form-control-lg input-lg text-start mb-0"
+                        name="poolTokenAmount" id="poolTokenAmount" aria-describedby="helpId" placeholder="0.00"
+                        value="" autocomplete="off" />
+                      <span class="input-group-text bg-transparent ps-1 pe-0">
+                        LP TKN
+                      </span>
+                    </div>
+                    <div class="row align-items-center">
+                      <div class="col-auto">
+                        <button type="button" class="btn btn-sm btn-dark">
+                          0%
+                        </button>
+                        <button type="button" class="btn btn-sm btn-dark ms-2">
+                          25%
+                        </button>
+                        <button type="button" class="btn btn-sm btn-dark ms-2">
+                          50%
+                        </button>
+                        <button type="button" class="btn btn-sm btn-dark ms-2">
+                          75%
+                        </button>
+                        <button type="button" class="btn btn-sm btn-dark ms-2">
+                          Max
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- Arrow down -->
+                <div class="row justify-content-center align-items-center my-n3">
+                  <button type="button" class="btn btn-rounded-circle btn-switch" tabindex="0">
+                    <i class="fe fe-arrow-down"></i>
+                  </button>
+                </div>
+                <!-- Receive -->
+                <div class="card card-inner-shadow">
+                  <div class="card-body py-3">
+                    <div class="row g-3 align-items-start mb-3">
+                      <div class="col-6">
+                        <div class="row g-3 align-items-center">
+                          <div class="col-auto">
+                            <div class="avatar">
+                              <img src="assets/img/tokens/unknown.svg" alt="selectedToken.symbol Icon"
+                                class="avatar-img rounded-circle" />
+                            </div>
+                          </div>
+                          <div class="col-9">
+                            <h3 class="mb-1 text-white text-truncate">
+                              selectedToken.symbol
+                            </h3>
+                            <p class="small mb-0 text-secondary text-truncate" title="selectedToken.name">
+                              selectedToken.name
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-6 text-end">
+                        <h3 class="mb-1 text-white text-truncate">
+                          0.0000
+                        </h3>
+                        <p class="small mb-0 text-secondary">
+                          $0.00
+                        </p>
+                      </div>
+                    </div>
+                    <div class="row g-3 align-items-start">
+                      <div class="col-6">
+                        <div class="row g-3 align-items-center">
+                          <div class="col-auto">
+                            <div class="avatar">
+                              <img src="assets/img/tokens/unknown.svg" alt="selectedToken.symbol Icon"
+                                class="avatar-img rounded-circle" />
+                            </div>
+                          </div>
+                          <div class="col-9">
+                            <h3 class="mb-1 text-white text-truncate">
+                              selectedToken.symbol
+                            </h3>
+                            <p class="small mb-0 text-secondary text-truncate" title="selectedToken.name">
+                              selectedToken.name
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-6 text-end">
+                        <h3 class="mb-1 text-white text-truncate">
+                          0.0000
+                        </h3>
+                        <p class="small mb-0 text-secondary">
+                          $0.00
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- End receive -->
+                <!--Action-->
+                <button type="button" class="btn btn-primary btn-lg w-100 ms-0 mb-4">Remove Liquidity</button>
+                <!-- End Action -->
+              </div>
+            </div>
+          </div>
+          <!--end pool position 1-->
+          <!--pool position 2-->
+          <a class="card border border-light text-white mb-3" data-bs-toggle="collapse" href="#" role="button"
+            aria-expanded="false" aria-controls="">
+            <div class="card-body py-3">
+              <div class="row align-items-center">
+                <div class="col-12 col-lg-8 text-start">
+                  <h4 class="mb-1 text-truncate">pool.token.symbol / pool.token.symbol</h4>
+                  <small class="text-secondary">
+                    Min price: x TKN per TKN / Max price: x TKN per TKN
+                  </small>
+                </div>
+                <div class="col-auto me-auto">
+                  <h4 class="mb-1 text-truncate">0.0000</h4>
+                  <small class="text-secondary">$0.00</small>
+                </div>
+                <div class="col-auto mr-auto">
+                  <span class="badge bg-success-soft d-none">In Range</span>
+                  <span class="badge bg-danger-soft">Out of Range</span>
+                </div>
+                <div class="col-auto ">
+                  <i class="fe fe-chevron-up text-secondary"></i>
+                  <i class="fe fe-chevron-down text-secondary"></i>
+                </div>
+              </div>
+            </div>
+          </a>
+          <!--end pool position 2-->
+        </div>
+      </div>
+      <!--End pool positions listing-->
+
+    </div>
+  </div>
+</div>

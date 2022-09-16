@@ -1,0 +1,20 @@
+{
+  "1": {
+    "GateFactory": "0xBD16088611054fce04711Aa9509D1D86E04dCe2c",
+    "CurveV2xPYTFactory": "0x7B96bfdde51226b637C7a3bc2E6C6Bc37ED51e83",
+    "UniswapV3xPYTFactory": "0xD373A63Ce95fe95bB8A3417DC075943CC39dD1d2",
+    "NonfungiblePositionManager": "0xC36442b4a4522E871399CD717aBDD847Ab11FE88"
+  },
+  "4": {
+    "GateFactory": "0x3A3B70721e026fcc46F4F16DA8291970713e412e",
+    "CurveV2xPYTFactory": "",
+    "UniswapV3xPYTFactory": "0x9FC04301Cf2c3AC58B571ef76d161d87A6bCA415",
+    "NonfungiblePositionManager": "0xC36442b4a4522E871399CD717aBDD847Ab11FE88"
+  },
+  "42161": {
+    "GateFactory": "0xBD16088611054fce04711Aa9509D1D86E04dCe2c",
+    "CurveV2xPYTFactory": "",
+    "UniswapV3xPYTFactory": "0x302C230bc53901D3fE363D3483B2548F938EfA33",
+    "NonfungiblePositionManager": "0xC36442b4a4522E871399CD717aBDD847Ab11FE88"
+  }
+}

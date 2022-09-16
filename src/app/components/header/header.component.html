@@ -1,0 +1,95 @@
+<nav class="navbar navbar-expand-lg border-0 z-30" id="topnav">
+  <div class="container">
+    <div class="row g-0 w-100">
+      <div class="col-auto d-flex align-items-center">
+        <!-- Brand -->
+        <a class="navbar-brand me-2" routerLink="">
+          <img src="./assets/img/bunni-logo@2x.png" alt="Bunni logo" />
+          <span class="h3 mb-0 text-white ms-2
+          ">Bunni</span>
+        </a>
+      </div>
+      <div class="col ml-auto d-flex justify-content-end">
+        <!-- User -->
+        <div class="navbar-user">
+          <div class="dropdown me-3">
+            <button
+              class="btn btn-dark dropdown-toggle d-flex align-items-center justify-content-center"
+              [ngClass]="!wallet.supportedChain ? 'bg-danger' : ''"
+              type="button"
+              id="dropdownMenuButton2"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+              style="height: 36px;"
+            >
+              <ng-container *ngIf="wallet.supportedChain">
+                <div class="avatar avatar-xxs me-lg-2">
+                  <img
+                    class="avatar-img rounded-circle p-0 bg-transparent"
+                    src="{{
+                      constants.CHAIN_METADATA[wallet.chainId].iconPath
+                    }}"
+                    alt="{{
+                      constants.CHAIN_METADATA[wallet.chainId].displayName
+                    }} Icon"
+                    width="16px"
+                  />
+                </div>
+                <div class="d-none d-lg-block">
+                  {{ constants.CHAIN_METADATA[wallet.chainId].displayName }}
+                </div>
+              </ng-container>
+              <ng-container *ngIf="!wallet.supportedChain">
+                Wrong Network
+              </ng-container>
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
+              <ng-container
+                *ngFor="let chain of constants.CHAIN_METADATA | keyvalue"
+              >
+                <li *ngIf="+chain.value.chainId !== wallet.chainId">
+                  <a
+                    class="dropdown-item active d-flex align-items-center"
+                    style="cursor: pointer;"
+                    (click)="wallet.changeChain(chain.value.chainId)"
+                  >
+                    <div class="avatar avatar-xxs me-2">
+                      <img
+                        class="avatar-img rounded-circle p-0 bg-transparent"
+                        src="{{ chain.value.iconPath }}"
+                        alt="{{ chain.value.displayName }} Icon"
+                        width="16px"
+                      />
+                    </div>
+                    {{ chain.value.displayName }}
+                  </a>
+                </li>
+              </ng-container>
+            </ul>
+          </div>
+          <button
+            class="btn btn-dark me-3"
+            type="button"
+            name="button"
+            (click)="openWalletModal()"
+            style="height: 36px;"
+          >
+            <ng-container *ngIf="!user">
+              Connect a Wallet
+            </ng-container>
+            <ng-container *ngIf="user">
+              <ng-container *ngIf="!ens">
+                {{ user.slice(0, 6) }}
+                ...
+                {{ user.slice(38, 42) }}
+              </ng-container>
+              <ng-container *ngIf="ens">
+                {{ ens }}
+              </ng-container>
+            </ng-container>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>

@@ -1,0 +1,103 @@
+.account-details {
+  margin-top: 1rem;
+  border: 1px double #3a3a3a;
+  border-radius: 1rem;
+  padding: 1rem;
+  color: grey;
+}
+
+.account-details__header {
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: grey;
+}
+
+.account-details__footer {
+  margin-top: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: left;
+}
+
+.account-details__footer p {
+  margin: 0;
+  cursor: pointer;
+}
+
+.account-disconnect {
+  border: 1px double #3a3a3a;
+  border-radius: 1rem;
+  background-color: transparent;
+  padding: 2px 10px;
+  color: grey;
+}
+
+.account-disconnect:hover {
+  border-color: #06e7cc;
+}
+
+.wallet-connect {
+  border-radius: 1rem;
+}
+
+.wallet-connect__content {
+  padding: 20px;
+}
+
+.wallet-connect__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: grey;
+}
+
+.wallet-connect__header .btn-close {
+  color: grey;
+  cursor: pointer;
+}
+
+.wallet-connect__body {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  height: auto;
+}
+
+.wallet-connect__provider {
+  height: 50px;
+  width: calc(50% - 10px);
+  border: 1px double #3a3a3a;
+  border-radius: 1rem;
+  margin: 10px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1rem;
+  color: grey;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+.wallet-connect__provider:hover {
+  border-color: #06e7cc;
+}
+
+.wallet-connect__provider img {
+  height: 35px;
+  width: 35px;
+}
+
+.wallet-connect__footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.wallet-connect__footer a {
+  text-decoration: none;
+}
+

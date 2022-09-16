@@ -1,0 +1,18 @@
+<div class="w-100">
+  <span class="chart-overlay">
+    <h3 class="mb-2">Total TVL</h3>
+    <h2 class="m-0">${{ tooltipValue[0].toFormat(2) }}{{ tooltipValue[1] }}</h2>
+    <small class="text-muted">{{ tooltipLabel }}</small>
+  </span>
+  <canvas
+    baseChart
+    class="m-4"
+    [datasets]="chartData"
+    [labels]="chartLabels"
+    [options]="chartOptions"
+    [legend]="chartLegend"
+    [type]="chartType"
+    [plugins]="chartPlugins"
+  >
+  </canvas>
+</div>

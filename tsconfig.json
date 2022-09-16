@@ -1,0 +1,37 @@
+/* To learn more about this file see: https://angular.io/config/tsconfig. */
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "baseUrl": "./",
+    "outDir": "./dist/out-tsc",
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": true,
+    "sourceMap": true,
+    "declaration": false,
+    "downlevelIteration": true,
+    "experimentalDecorators": true,
+    "moduleResolution": "node",
+    "importHelpers": true,
+    "target": "es2017",
+    "module": "es2020",
+    "lib": ["es2018", "dom"],
+    "skipLibCheck": true,
+    "paths": {
+      "os": ["node_modules/os-browserify"],
+      "stream": ["node_modules/stream-browserify"],
+      "assert": ["node_modules/assert-browserify"],
+      "http": ["node_modules/http-browserify"],
+      "https": ["node_modules/https-browserify"],
+      "crypto": ["node_modules/crypto-browserify"]
+    },
+    "allowSyntheticDefaultImports": true
+  },
+  "angularCompilerOptions": {
+    "enableI18nLegacyMessageIdFormat": false,
+    "strictPropertyInitialization": false,
+    "strictInjectionParameters": true,
+    "strictInputAccessModifiers": true,
+    "strictDomEventTypes": false,
+    "strictTemplates": true
+  }
+}

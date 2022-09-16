@@ -1,0 +1,139 @@
+<div class="claim-modal__modal ">
+  <div class="claim-modal__content">
+    <div class="claim-modal__header">
+      <h3>
+        Claim Your Earnings
+      </h3>
+      <h2
+        class="btn-close modal-close"
+        aria-label="Close"
+        (click)="activeModal.dismiss()"
+      ></h2>
+    </div>
+    <div class="claim-modal__body">
+      <div class="claim-details">
+        <table class="table mb-0">
+          <tbody>
+            <!-- <tr>
+              <td class="px-0 py-1 test-white border-0">
+                PYT Balance
+              </td>
+              <td class="px-0 py-1 text-white text-end border-0">
+                0.0000
+              </td>
+            </tr>
+            <tr>
+              <td class="px-0 py-1 text-white border-0">
+                PYT Price
+              </td>
+              <td class="px-0 py-1 text-white text-end border-0">
+                $0.00
+              </td>
+            </tr>
+            <tr>
+              <td class="px-0 py-1 text-white border-0">
+                Current APY
+              </td>
+              <td class="px-0 py-1 text-white text-end border-0">
+                0.00%
+              </td>
+            </tr> -->
+            <!-- <tr class="mb-2">
+              <td class="px-0 py-1 text-white border-0">
+                Claimable Earnings
+              </td>
+              <td class="px-0 py-1 text-white text-end border-0">
+                0.0000
+              </td>
+            </tr> -->
+            <tr>
+              <td class="px-0 py-1 text-white border-0">
+                Compound Your Earnings
+              </td>
+              <td class="px-0 py-1 text-white text-end border-0">
+                <div class="form-check form-switch d-flex justify-content-end">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    id="compoundEarnings"
+                    [checked]="compoundEarnings"
+                    (change)="toggleCompoundEarnings()"
+                  />
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td class="px-0 py-1 pb-3 text-white border-0">
+                Claim In Vault Shares
+              </td>
+              <td class="px-0 py-1 pb-3 text-white text-end border-0">
+                <div class="form-check form-switch d-flex justify-content-end">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    id="claimInVaultShares"
+                    [checked]="claimInVaultShares"
+                    (change)="toggleClaimInVaultShares()"
+                  />
+                </div>
+              </td>
+            </tr>
+            <tr style="border-top: 1px dotted white;">
+              <td class="px-0 pt-3 pb-1 text-white border-0">
+                Your Earnings
+              </td>
+              <td class="px-0 pt-3 pb-1 text-white text-end border-0">
+                {{ position.earnings.dp(8).toPrecision() }}
+                {{ position.vault.underlying.symbol }}
+              </td>
+            </tr>
+            <tr>
+              <td class="px-0 py-1 text-white border-0">
+                You Will Receive
+              </td>
+            </tr>
+            <tr>
+              <td class="ps-4 py-0 text-white border-0">
+                <ng-container *ngIf="!compoundEarnings && !claimInVaultShares">
+                  {{ position.vault.underlying.symbol }}
+                </ng-container>
+                <ng-container *ngIf="compoundEarnings">
+                  {{ position.vault.pyt.symbol }}
+                </ng-container>
+                <ng-container *ngIf="claimInVaultShares">
+                  {{ position.vault.share.symbol }}
+                </ng-container>
+              </td>
+              <td class="px-0 py-0 text-white text-end border-0">
+                <ng-container *ngIf="!compoundEarnings && !claimInVaultShares">
+                  {{ underlyingReceived.dp(8).toPrecision() }}
+                </ng-container>
+                <ng-container *ngIf="compoundEarnings">
+                  {{ pytReceived.dp(8).toPrecision() }}
+                </ng-container>
+                <ng-container *ngIf="claimInVaultShares">
+                  {{ shareReceived.dp(8).toPrecision() }}
+                </ng-container>
+              </td>
+            </tr>
+            <tr *ngIf="compoundEarnings">
+              <td class="ps-4 py-0 text-white border-0">
+                {{ position.vault.nyt.symbol }}
+              </td>
+              <td class="px-0 py-0 text-white text-end border-0">
+                {{ nytReceived.dp(8).toPrecision() }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <button
+        type="button"
+        class="btn btn-primary btn-lg w-100 mt-4 ms-0"
+        (click)="claim()"
+      >
+        Claim
+      </button>
+    </div>
+  </div>
+</div>

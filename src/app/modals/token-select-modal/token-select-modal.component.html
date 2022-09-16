@@ -1,0 +1,118 @@
+<div class="modal-card card">
+  <div class="card-header border-bottom border-dark">
+    <form>
+      <div
+        class="input-group input-group-flush input-group-merge input-group-reverse"
+      >
+        <input
+          type="search"
+          placeholder="Search by name, symbol or address"
+          class="form-control list-search"
+          (input)="filterTokens($event.target.value)"
+        />
+        <div class="input-group-text">
+          <span class="fe fe-search"></span>
+        </div>
+      </div>
+    </form>
+    <button
+      type="button"
+      (click)="activeModal.dismiss()"
+      aria-label="Close"
+      class="btn-close"
+    ></button>
+  </div>
+  <div class="card-body p-0">
+    <p class="text-center" *ngIf="filteredTokens.length === 0">
+      No results found
+    </p>
+
+    <div class="mb-0">
+      <table
+        class="table table-sm table-hover card-table"
+        mat-table
+        [dataSource]="filteredTokens"
+      >
+        <thead>
+          <tr>
+            <th mat-header-cell *matHeaderCellDef></th>
+          </tr>
+        </thead>
+        <tbody class="list">
+          <ng-container matColumnDef="asset">
+            <td *matCellDef="let token">
+              <div class="d-flex align-items-center">
+                <!-- Image -->
+                <div class="avatar">
+                  <img
+                    class="avatar-img rounded-circle me-3"
+                    src="{{ token.iconPath }}"
+                    alt="{{ token.symbol }} Icon"
+                    [ngClass]="{
+                      'border-pyt': token.symbol.toLowerCase().includes('pyt'),
+                      'border-nyt': token.symbol.toLowerCase().includes('nyt')
+                    }"
+                    onerror="this.src = 'assets/img/tokens/unknown.svg'"
+                  />
+                </div>
+
+                <div class="ms-3">
+                  <!-- Heading -->
+                  <h4 class="fw-normal mb-1">
+                    {{ token.symbol }}
+                  </h4>
+
+                  <!-- Text -->
+                  <small class="text-muted">
+                    {{ token.name }}
+                    ({{ token.address.slice(0, 5) }}...{{ token.address.slice(38, 42) }})
+                    <a
+                      href="{{ constants.CHAIN_METADATA[wallet.chainId].blockExplorerUrls[0] }}/address/{{ token.address }}"
+                      target="_blank"
+                      class="fe fe-external-link text-muted"
+                      (click)="$event.stopPropagation()">
+                    </a>
+                  </small>
+                </div>
+              </div>
+            </td>
+            <td mat-footer-cell *matFooterCellDef></td>
+          </ng-container>
+          <ng-container matColumnDef="balance">
+            <td *matCellDef="let token" class="text-end">
+              <h4 class="m-2 name">
+                <ng-container
+                  *ngIf="userBalances && userBalances[token.address]"
+                >
+                  {{
+                    userBalances[token.address].div(token.precision).toFormat(4)
+                  }}
+                </ng-container>
+                <ng-container
+                  *ngIf="!userBalances || !userBalances[token.address]"
+                >
+                  0.0000
+                </ng-container>
+              </h4>
+            </td>
+            <td mat-footer-cell *matFooterCellDef></td>
+          </ng-container>
+
+          <tr
+            mat-row
+            *matRowDef="let token; columns: ['asset', 'balance']"
+            [ngClass]="
+              selectedToken && selectedToken.address === token.address
+                ? 'token-select__selected'
+                : 'token-select'
+            "
+            (click)="
+              (!selectedToken || selectedToken.address !== token.address) &&
+                selectToken(token)
+            "
+          ></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
